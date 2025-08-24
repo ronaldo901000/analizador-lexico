@@ -53,8 +53,11 @@ public class Comparador {
                             crearToken(palabraSimple, Color.yellow, TipoToken.OPERADOR.getNombre());
                      } else if (sintaxis.esDeAgrupacion(palabraSimple.getCadena())) {
                             crearToken(palabraSimple, new Color(128, 0, 128), TipoToken.AGRUPACION.getNombre());
+                     }else if(sintaxis.esDePuntuacion(palabraSimple.getCadena())){
+                            crearToken(palabraSimple, Color.pink, TipoToken.PUNTUACION.getNombre());
                      } else {
                             crearToken(palabraSimple, Color.RED, TipoToken.ERROR.getNombre());
+                            almacen.agregarAlContador();
 
                      }
               } catch (DefinicionException e) {

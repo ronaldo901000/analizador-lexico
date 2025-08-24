@@ -31,8 +31,9 @@ public class ProcesadorPalabras {
               String[] lineas = texto.split("\n", -1);
               int posicionCaracterEnMovimiento = 0;
 
-              // Elimina todos los tokens del almacen
+              // Elimina todos los tokens del almacen y el contador de errores
               motor.getAlmacenTokens().getListaTokens().clear();
+              motor.getAlmacenTokens().setContadorErrores(0);
 
               for (int numeroLinea = 0; numeroLinea < lineas.length; numeroLinea++) {
                      String lineaActual = lineas[numeroLinea];
@@ -55,7 +56,7 @@ public class ProcesadorPalabras {
                                    int inicio = indiceCaracter;
                                    int fin = lineaActual.length();
                                    String restoDeLinea = lineaActual.substring(inicio, fin);
-                                   Token token = new Token(TipoToken.COMENTARIO_LINEA.getNombre(), Color.GREEN, restoDeLinea, numeroLinea, columnaActual, true);
+                                   Token token = new Token(TipoToken.COMENTARIO_LINEA.getNombre(), new Color(0, 95, 0), restoDeLinea, numeroLinea, columnaActual, true);
                                    token.setPosicionCaracter(posicionCaracterEnMovimiento + columnaActual);
                                    motor.getImpresor().colorearToken(textPane, token);
                                    break;

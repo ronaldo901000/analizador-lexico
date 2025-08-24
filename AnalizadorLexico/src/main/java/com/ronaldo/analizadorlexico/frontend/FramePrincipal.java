@@ -4,10 +4,12 @@ import com.ronaldo.analizadorlexico.frontend.dialogs.EditorJson;
 import com.ronaldo.analizadorlexico.backend.Motor;
 import com.ronaldo.analizadorlexico.backend.enums.Extension;
 import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteErroresDialog;
+import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteTokensDialog;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -67,6 +69,8 @@ public class FramePrincipal extends javax.swing.JFrame {
               btnEditarConfig = new javax.swing.JButton();
               panelReportes = new javax.swing.JPanel();
               btnReporteErrores = new javax.swing.JButton();
+              btnReporteTokens = new javax.swing.JButton();
+              btnReporteGeneral = new javax.swing.JButton();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -159,14 +163,14 @@ public class FramePrincipal extends javax.swing.JFrame {
                                    .addComponent(btnEditarConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                    .addComponent(txtBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(14, Short.MAX_VALUE))
+                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                            .addGap(14, 14, 14))
               );
 
               panelReportes.setBackground(new java.awt.Color(0, 153, 153));
@@ -179,21 +183,42 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
+              btnReporteTokens.setText("Reporte Tokens");
+              btnReporteTokens.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            btnReporteTokensActionPerformed(evt);
+                     }
+              });
+
+              btnReporteGeneral.setText("Reporte General");
+              btnReporteGeneral.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            btnReporteGeneralActionPerformed(evt);
+                     }
+              });
+
               javax.swing.GroupLayout panelReportesLayout = new javax.swing.GroupLayout(panelReportes);
               panelReportes.setLayout(panelReportesLayout);
               panelReportesLayout.setHorizontalGroup(
                      panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(panelReportesLayout.createSequentialGroup()
                             .addGap(15, 15, 15)
-                            .addComponent(btnReporteErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnReporteErrores)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnReporteTokens)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnReporteGeneral)
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               );
               panelReportesLayout.setVerticalGroup(
                      panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(panelReportesLayout.createSequentialGroup()
-                            .addContainerGap(40, Short.MAX_VALUE)
-                            .addComponent(btnReporteErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(38, Short.MAX_VALUE))
+                            .addContainerGap(13, Short.MAX_VALUE)
+                            .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                   .addComponent(btnReporteErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                   .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                   .addComponent(btnReporteGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addContainerGap(14, Short.MAX_VALUE))
               );
 
               javax.swing.GroupLayout contenedorLayout = new javax.swing.GroupLayout(contenedor);
@@ -213,10 +238,10 @@ public class FramePrincipal extends javax.swing.JFrame {
                      .addGroup(contenedorLayout.createSequentialGroup()
                             .addComponent(lblEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(contenedorCarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(16, Short.MAX_VALUE))
+                            .addComponent(contenedorCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(18, 18, 18)
+                            .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(16, 16, 16))
               );
 
               javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -295,6 +320,20 @@ public class FramePrincipal extends javax.swing.JFrame {
               dialog.setVisible(true);
        }//GEN-LAST:event_btnReporteErroresActionPerformed
 
+       private void btnReporteTokensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteTokensActionPerformed
+              if(motor.getAlmacenTokens().todosLosTokensSonCorrectos()){
+                     ReporteTokensDialog dialog = new ReporteTokensDialog(motor.getAlmacenTokens().getListaTokens());
+                     dialog.setVisible(true);
+              }
+              else{
+                     JOptionPane.showMessageDialog(this, "se habilita cuando no hay errores", "No se puede abrir", JOptionPane.INFORMATION_MESSAGE);
+              }
+       }//GEN-LAST:event_btnReporteTokensActionPerformed
+
+       private void btnReporteGeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteGeneralActionPerformed
+              motor.crearReporteGeneral();
+       }//GEN-LAST:event_btnReporteGeneralActionPerformed
+
        private File obtenerFile(String extension, File file) {
               JFileChooser chooserArchivo = new JFileChooser();
               chooserArchivo.setDialogTitle("Archivo ");
@@ -329,7 +368,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
                      @Override
                      public void changedUpdate(DocumentEvent e) {
-                            actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
                      }
               });
               actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
@@ -405,6 +443,8 @@ public class FramePrincipal extends javax.swing.JFrame {
        private javax.swing.JButton btnCargaDatos;
        private javax.swing.JButton btnEditarConfig;
        private javax.swing.JButton btnReporteErrores;
+       private javax.swing.JButton btnReporteGeneral;
+       private javax.swing.JButton btnReporteTokens;
        private javax.swing.JPanel contenedor;
        private javax.swing.JPanel contenedorCarga;
        private javax.swing.JLabel lblEncabezado;
