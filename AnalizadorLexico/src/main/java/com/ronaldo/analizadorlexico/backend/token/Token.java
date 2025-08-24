@@ -8,6 +8,7 @@ public class Token {
        private String lexema;
        private int fila;
        private int columna;
+       private int posicionCaracter;
        private boolean esFinal;
 
        public Token(String tipo,Color color, String lexema, int fila, int columna, boolean esFinal) {
@@ -47,6 +48,15 @@ public class Token {
               this.esFinal = esFinal;
        }
 
+       public int getPosicionCaracter() {
+              return posicionCaracter;
+       }
+
+       public void setPosicionCaracter(int posicionCaracter) {
+              this.posicionCaracter = posicionCaracter;
+       }
+
+       
        
 
 }
