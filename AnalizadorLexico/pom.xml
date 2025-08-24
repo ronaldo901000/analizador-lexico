@@ -10,4 +10,26 @@
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>com.ronaldo.analizadorlexico.Main</exec.mainClass>
     </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <!-- Here come other details
+                ...
+                -->
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.ronaldo.analizadorlexico.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <!-- Here come other details
+                ...
+                -->
+            </plugin>
+        </plugins>
+    </build>
 </project>

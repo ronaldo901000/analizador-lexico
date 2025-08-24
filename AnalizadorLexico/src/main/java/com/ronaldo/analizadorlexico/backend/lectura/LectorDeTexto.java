@@ -1,14 +1,12 @@
 package com.ronaldo.analizadorlexico.backend.lectura;
 
-import com.ronaldo.analizadorlexico.backend.Motor;
-import com.ronaldo.analizadorlexico.backend.almacenamiento.AlmacenTokens;
-import com.ronaldo.analizadorlexico.backend.comparacion.Comparador;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 
 
 /**
@@ -16,50 +14,42 @@ import javax.swing.JTextPane;
  * @author ronaldo
  */
 public class LectorDeTexto {
-       private Motor motor;
-       
-       public LectorDeTexto(Motor motor){
-              this.motor =motor;
+       public LectorDeTexto(){
+
        }
        /**
         * metodo que se encarga de leer el texto que el usuario ingrese desde el txt
         * @param file
         * @param palabras 
         */
-       public void leerTexto(File file, List<PalabraSimple> palabras, JTextPane txtPane) {
+       public void leerTexto(File file, JTextPane txtPane) {
               try (BufferedReader buffer = new BufferedReader(new FileReader(file))) {
+                     StyledDocument doc = txtPane.getStyledDocument();
+                     doc.remove(0, doc.getLength()); 
+
                      String linea;
-                     int numeroLinea = 0;
-                     txtPane.setText("");
-
                      while ((linea = buffer.readLine()) != null) {
-                            String[] palabrasLinea = linea.split(" ");
-
-                            for (int posicionPalabra = 0; posicionPalabra < palabrasLinea.length; posicionPalabra++) {
-                                   String palabraTexto = palabrasLinea[posicionPalabra];
-
-                                   PalabraSimple palabraSimple = new PalabraSimple(
-                                           palabraTexto,
-                                           numeroLinea,
-                                           posicionPalabra
-                                   );
-
-                                   if (posicionPalabra == palabrasLinea.length - 1) {
-                                          palabraSimple.setEsFinal(true);
-                                   }
-
-                                   palabras.add(palabraSimple);
-                            }
-
-                            numeroLinea++;
+                            doc.insertString(doc.getLength(), linea + "\n", null);
                      }
-
-
-              } catch (IOException e) {
+              } catch (IOException | BadLocationException e) {
                      e.printStackTrace();
               }
        }
 
-
+       public void leerConfiguracion(File file, JTextPane txtPane) {
+              if (file == null) {
+                     return;
+              }
+              String contenido = "";
+              try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                     String linea;
+                     while ((linea = reader.readLine()) != null) {
+                           contenido+=linea+"\n"; 
+                     }
+                     txtPane.setText(contenido);
+              } catch (IOException e) {
+                     e.printStackTrace();
+              }
+       }
 
 }

@@ -10,6 +10,7 @@ public class PalabraSimple {
        private int fila;
        private int columna;
        private boolean esFinal;
+       private int posicionCaracter;
        
        public PalabraSimple(String cadena, int fila, int columna) {
               this.cadena = cadena;
@@ -37,6 +38,15 @@ public class PalabraSimple {
        public void setEsFinal(boolean esFinal) {
               this.esFinal = esFinal;
        }
+
+       public int getPosicionCaracter() {
+              return posicionCaracter;
+       }
+
+       public void setPosicionCaracter(int posicionCaracter) {
+              this.posicionCaracter = posicionCaracter;
+       }
+       
        
        
 

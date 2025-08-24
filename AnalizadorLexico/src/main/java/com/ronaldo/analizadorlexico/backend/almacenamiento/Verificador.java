@@ -13,11 +13,11 @@ import java.util.List;
  * @author ronaldo
  */
 public class Verificador {
+
        private ArchivadorExterno archivador;
-       
-       
-       public Verificador(){
-              archivador= new ArchivadorExterno();
+
+       public Verificador() {
+              archivador = new ArchivadorExterno();
        }
 
        public ArchivadorExterno getArchivador() {
@@ -25,8 +25,8 @@ public class Verificador {
        }
 
        /**
-        * 
-        * @param file 
+        *
+        * @param file
         */
        public void leerConfiguracion(File file) {
               try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -35,7 +35,6 @@ public class Verificador {
                      while ((linea = reader.readLine()) != null) {
                             linea = linea.trim();
 
-                            // procesar solo si NO está vacía
                             if (!linea.isEmpty()) {
                                    obtenerTipo(linea);
                             }
@@ -47,8 +46,8 @@ public class Verificador {
        }
 
        /**
-        * 
-        * @param texto 
+        *
+        * @param texto
         */
        private void obtenerTipo(String texto) {
               int inicio = texto.indexOf("\"");
@@ -75,9 +74,9 @@ public class Verificador {
        }
 
        /**
-        * 
+        *
         * @param tipoToken
-        * @param elementos 
+        * @param elementos
         */
        public void organizarTipo(String tipoToken, String elementos) {
               if (tipoToken.equals(TipoToken.PALABRA_RESERVADA.getNombre())) {
@@ -117,9 +116,9 @@ public class Verificador {
        }
 
        /**
-        * 
+        *
         * @param linea
-        * @param definicion 
+        * @param definicion
         */
        private void procesarElementos(String linea, DefinicionToken definicion) {
               if (linea.contains("\"")) {
@@ -132,7 +131,6 @@ public class Verificador {
                                    break;
                             }
                             String elemento = elementos[i].substring(inicio + 1, fin);
-                            System.out.println(elemento);
                             definicion.agregarElemento(elemento);
                      }
               }
@@ -140,9 +138,9 @@ public class Verificador {
        }
 
        /**
-        * 
+        *
         * @param texto
-        * @return 
+        * @return
         */
        public static List<String> extraerSignosDePuntuacionEntreComillas(String texto) {
               List<String> elementos = new ArrayList<>();
@@ -160,7 +158,6 @@ public class Verificador {
                      }
 
                      String elemento = texto.substring(inicio + 1, fin);
-                     System.out.println(elemento);
                      elementos.add(elemento);
 
                      inicio = fin + 1;
@@ -183,9 +180,9 @@ public class Verificador {
                             int fin = valor.indexOf('"', inicio + 1);
                             if (inicio != -1 && fin != -1) {
                                    String elemento = valor.substring(inicio + 1, fin);
-                                   System.out.println(elemento);
                                    definicion.agregarElemento(elemento);
                                    archivador.agregarDefinicion(definicion);
+                                   System.out.println(elemento);
                             }
 
                      }

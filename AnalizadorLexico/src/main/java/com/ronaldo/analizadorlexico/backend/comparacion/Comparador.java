@@ -1,6 +1,7 @@
 package com.ronaldo.analizadorlexico.backend.comparacion;
 
-import com.ronaldo.analizadorlexico.backend.almacenamiento.AlmacenTokens;
+import com.ronaldo.analizadorlexico.backend.DefinicionException;
+import com.ronaldo.analizadorlexico.backend.almacen.AlmacenTokens;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
 import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
 import com.ronaldo.analizadorlexico.backend.lectura.PalabraSimple;
@@ -17,41 +18,70 @@ public class Comparador {
        private List <PalabraSimple> palabrasSimples;
        private List <DefinicionToken> listaDefinicionTokens;
        
-       public Comparador(AlmacenTokens almacen){
+       public Comparador(AlmacenTokens almacen, List <PalabraSimple> palabrasSimples){
               sintaxis= new Sintaxis();
-              
               this.almacen=almacen;
+              this.palabrasSimples=palabrasSimples;
        }
        
        public void iniciarComparacion(){
               sintaxis.setListaDefinicionTokens(listaDefinicionTokens);
               for (int i = 0; i < palabrasSimples.size(); i++) {
-                     if(sintaxis.esComentarioLinea(palabrasSimples.get(i).getCadena())){
-                            asignarToken(palabrasSimples.get(i), Color.GREEN,TipoToken.COMENTARIO_LINEA.getNombre());
-                     }
-                     else if(sintaxis.esCadena(palabrasSimples.get(i).getCadena())){
-                            asignarToken(palabrasSimples.get(i), Color.ORANGE,TipoToken.CADENA.getNombre());
-                     }
-                     else if(sintaxis.esPalabraReservada(palabrasSimples.get(i).getCadena())){
-                            System.out.println("si es reservada");
-                            asignarToken(palabrasSimples.get(i), Color.BLUE, TipoToken.PALABRA_RESERVADA.getNombre());
-                     }
-                     else if(sintaxis.esDecimal(palabrasSimples.get(i).getCadena())){
-                            asignarToken(palabrasSimples.get(i), Color.BLACK, TipoToken.NUMERO_DECIMAL.getNombre());
-                     }
-                     else if(sintaxis.esNumero(palabrasSimples.get(i).getCadena())){
-                            asignarToken(palabrasSimples.get(i), Color.GREEN, TipoToken.NUMERO_ENTERO.getNombre());
-                     }
-                     else{
-                            asignarToken(palabrasSimples.get(i), Color.RED, TipoToken.ERROR.getNombre());
-                     }
+                     evaluarTipoToken(palabrasSimples.get(i));
               }
        }
-
        
-        public void asignarToken(PalabraSimple palabra, Color color, String tipo) {  
-              Token token = new Token(tipo, color, palabra.getCadena()+" ",palabra.getFila(),
-                      palabra.getColumna(), palabra.isEsFinal());
+       /**
+        * 
+        * @param palabraSimple 
+        */
+       public void evaluarTipoToken(PalabraSimple palabraSimple) {
+              try {
+                     if (sintaxis.esComentarioLinea(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, Color.GREEN, TipoToken.COMENTARIO_LINEA.getNombre());
+                     } else if (sintaxis.esCadena(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, Color.ORANGE, TipoToken.CADENA.getNombre());
+                     } else if (sintaxis.esPalabraReservada(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, Color.BLUE, TipoToken.PALABRA_RESERVADA.getNombre());
+                     } else if (sintaxis.esDecimal(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, Color.BLACK, TipoToken.NUMERO_DECIMAL.getNombre());
+                     } else if (sintaxis.esNumero(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, Color.GREEN, TipoToken.NUMERO_ENTERO.getNombre());
+                     } else if (sintaxis.esIdentificador(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, new Color(139, 69, 19), TipoToken.IDENTIFICADOR.getNombre());
+                     } else if (sintaxis.esOperador(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, Color.yellow, TipoToken.OPERADOR.getNombre());
+                     } else if (sintaxis.esDeAgrupacion(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, new Color(128, 0, 128), TipoToken.AGRUPACION.getNombre());
+                     } else {
+                            crearToken(palabraSimple, Color.RED, TipoToken.ERROR.getNombre());
+
+                     }
+              } catch (DefinicionException e) {
+              }
+
+       }
+
+       /**
+        * 
+        * @param palabra
+        * @param color
+        * @param tipo 
+        */
+       public void crearToken(PalabraSimple palabra, Color color, String tipo) {
+              
+              // se ordenan los parametros
+              String lexema = palabra.getCadena();
+              int fila = palabra.getFila();
+              int columna = palabra.getColumna();
+              boolean esFinal = palabra.isEsFinal();
+              int posicionCaracter = palabra.getPosicionCaracter();
+              
+              // se crea el token
+              Token token = new Token(tipo, color, lexema, fila, columna, esFinal);
+              token.setPosicionCaracter(posicionCaracter);
+              
+              //se guarda el token
               almacen.getListaTokens().add(token);
 
        }
@@ -62,10 +92,6 @@ public class Comparador {
 
        public void setSintaxis(Sintaxis sintaxis) {
               this.sintaxis = sintaxis;
-       }
-
-       public List<PalabraSimple> getPalabrasSimples() {
-              return palabrasSimples;
        }
 
        public void setPalabrasSimples(List<PalabraSimple> palabrasSimples) {

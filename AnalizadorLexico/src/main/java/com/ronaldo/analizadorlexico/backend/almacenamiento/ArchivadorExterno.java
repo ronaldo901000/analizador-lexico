@@ -22,4 +22,8 @@ public class ArchivadorExterno {
               listadoDefinicionTokens.add(definicion);
        }
        
+       public void eliminarDefiniciones(){
+              listadoDefinicionTokens.clear();
+       }
+       
 }

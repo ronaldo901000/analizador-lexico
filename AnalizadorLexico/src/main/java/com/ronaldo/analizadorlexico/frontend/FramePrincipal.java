@@ -1,11 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.ronaldo.analizadorlexico.frontend;
 
+import com.ronaldo.analizadorlexico.frontend.dialogs.EditorJson;
 import com.ronaldo.analizadorlexico.backend.Motor;
 import com.ronaldo.analizadorlexico.backend.enums.Extension;
+import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteErroresDialog;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
@@ -28,17 +26,24 @@ public class FramePrincipal extends javax.swing.JFrame {
        private JTextArea lineaDeNumerosSalida;
        private File fileEntrada;
        private File fileConfig;
+       private boolean escuchadorActivado;
+       private DocumentListener listener;
+       private File archivoJson;
+
        /**
         * Creates new form FramePrincipal
         */
        public FramePrincipal(Motor motor) {
               initComponents();
+              escuchadorActivado=true;
               lineaDeNumerosEntrada = new JTextArea("1");
               lineaDeNumerosSalida = new JTextArea("1");
-              inicializarNumeroDeLineas(scrollPaneAreaEntrada,txtPaneEntrada, lineaDeNumerosEntrada);
-              inicializarNumeroDeLineas(scrollPaneSalida, txtPaneSalida,lineaDeNumerosSalida);
-              this.motor=motor;
-
+              this.motor = motor;
+              inicializarNumeroDeLineas(scrollPaneAreaEntrada, txtPaneEntrada, lineaDeNumerosEntrada);
+              inicializarNumeroDeLineas(scrollPaneSalida, txtPaneSalida, lineaDeNumerosSalida);
+              inicializarEscuchadorTextoEntrada();
+              toggleEscuchador(escuchadorActivado);
+              btnEditarConfig.setEnabled(false);
        }
 
        /**
@@ -60,6 +65,8 @@ public class FramePrincipal extends javax.swing.JFrame {
               txtPaneSalida = new javax.swing.JTextPane();
               btnCargaDatos = new javax.swing.JButton();
               btnEditarConfig = new javax.swing.JButton();
+              panelReportes = new javax.swing.JPanel();
+              btnReporteErrores = new javax.swing.JButton();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,6 +105,7 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
+              txtPaneSalida.setEditable(false);
               txtPaneSalida.setFont(new java.awt.Font("Monospaced", 0, 17)); // NOI18N
               scrollPaneSalida.setViewportView(txtPaneSalida);
 
@@ -128,41 +136,64 @@ public class FramePrincipal extends javax.swing.JFrame {
                      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorCargaLayout.createSequentialGroup()
                             .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                    .addGroup(contenedorCargaLayout.createSequentialGroup()
-                                          .addGap(38, 38, 38)
+                                          .addGap(18, 18, 18)
+                                          .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                 .addComponent(scrollPaneSalida)
+                                                 .addComponent(scrollPaneAreaEntrada)))
+                                   .addGroup(contenedorCargaLayout.createSequentialGroup()
+                                          .addGap(40, 40, 40)
                                           .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                           .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                           .addComponent(btnCargaDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                           .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                           .addComponent(btnEditarConfig)
-                                          .addGap(3, 3, 3))
-                                   .addGroup(contenedorCargaLayout.createSequentialGroup()
-                                          .addGap(18, 18, 18)
-                                          .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                 .addComponent(scrollPaneSalida)
-                                                 .addComponent(scrollPaneAreaEntrada))))
+                                          .addGap(3, 3, 3)))
                             .addGap(37, 37, 37))
               );
               contenedorCargaLayout.setVerticalGroup(
                      contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(contenedorCargaLayout.createSequentialGroup()
-                            .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                   .addGroup(contenedorCargaLayout.createSequentialGroup()
-                                          .addContainerGap()
-                                          .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                   .addGroup(contenedorCargaLayout.createSequentialGroup()
-                                          .addGap(14, 14, 14)
-                                          .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                 .addComponent(btnCargaDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                 .addComponent(btnEditarConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGap(14, 14, 14)
+                            .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                   .addComponent(btnCargaDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                   .addComponent(btnEditarConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                   .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                    .addComponent(txtBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(27, 27, 27)
-                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
-                            .addGap(42, 42, 42))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(14, Short.MAX_VALUE))
+              );
+
+              panelReportes.setBackground(new java.awt.Color(0, 153, 153));
+              panelReportes.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+
+              btnReporteErrores.setText("Reporte Errores");
+              btnReporteErrores.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            btnReporteErroresActionPerformed(evt);
+                     }
+              });
+
+              javax.swing.GroupLayout panelReportesLayout = new javax.swing.GroupLayout(panelReportes);
+              panelReportes.setLayout(panelReportesLayout);
+              panelReportesLayout.setHorizontalGroup(
+                     panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                     .addGroup(panelReportesLayout.createSequentialGroup()
+                            .addGap(15, 15, 15)
+                            .addComponent(btnReporteErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+              );
+              panelReportesLayout.setVerticalGroup(
+                     panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                     .addGroup(panelReportesLayout.createSequentialGroup()
+                            .addContainerGap(40, Short.MAX_VALUE)
+                            .addComponent(btnReporteErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(38, Short.MAX_VALUE))
               );
 
               javax.swing.GroupLayout contenedorLayout = new javax.swing.GroupLayout(contenedor);
@@ -170,18 +201,22 @@ public class FramePrincipal extends javax.swing.JFrame {
               contenedorLayout.setHorizontalGroup(
                      contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addComponent(lblEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 949, Short.MAX_VALUE)
-                     .addGroup(contenedorLayout.createSequentialGroup()
+                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorLayout.createSequentialGroup()
                             .addGap(17, 17, 17)
-                            .addComponent(contenedorCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                   .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                   .addComponent(contenedorCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGap(17, 17, 17))
               );
               contenedorLayout.setVerticalGroup(
                      contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(contenedorLayout.createSequentialGroup()
                             .addComponent(lblEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(contenedorCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGap(27, 27, 27))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(contenedorCarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(16, Short.MAX_VALUE))
               );
 
               javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -199,6 +234,11 @@ public class FramePrincipal extends javax.swing.JFrame {
        }// </editor-fold>//GEN-END:initComponents
 
        private void btnCargaArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaArchivoActionPerformed
+              boolean estadoOriginal = this.escuchadorActivado;
+
+              if (estadoOriginal) {
+                     toggleEscuchador(false);
+              }
               JFileChooser chooserArchivo = new JFileChooser();
               chooserArchivo.setDialogTitle("Archivo de entrada");
               FileNameExtensionFilter filtro = new FileNameExtensionFilter("archivo de texto", "txt");
@@ -209,13 +249,20 @@ public class FramePrincipal extends javax.swing.JFrame {
 
               if (seleccionado == JFileChooser.APPROVE_OPTION) {
                      File archivoDeEntrada = chooserArchivo.getSelectedFile();
-                     motor.getCargador().pedirLecturaArchivo(archivoDeEntrada, txtPaneEntrada);
-                     actualizarNumeroDeLinea(lineaDeNumerosEntrada, txtPaneEntrada);
+                     motor.realizarAccionesAccionesTexto(archivoDeEntrada, txtPaneEntrada);
+                     
+              }
+
+              if (estadoOriginal) {
+                     toggleEscuchador(true);
               }
        }//GEN-LAST:event_btnCargaArchivoActionPerformed
 
        private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
-              File archivo= obtenerFile(Extension.TXT.getExtension(),fileEntrada);
+              File archivo = obtenerFile(Extension.TXT.getExtension(), fileEntrada);
+              if (archivo == null) {
+                     return;
+              }
               motor.getCargador().pedirLecturaArchivo(archivo, txtPaneEntrada);
               
               actualizarNumeroDeLinea(lineaDeNumerosEntrada, txtPaneEntrada);
@@ -229,13 +276,24 @@ public class FramePrincipal extends javax.swing.JFrame {
        }//GEN-LAST:event_btnBuscarActionPerformed
 
        private void btnCargaDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaDatosActionPerformed
-              File archivo=obtenerFile(Extension.JSON.getExtension(),fileConfig);
-              motor.getVerificador().leerConfiguracion(archivo);
+              File file = obtenerFile(Extension.JSON.getExtension(), fileConfig);
+              if (file == null) {
+                     return;
+              }
+              archivoJson = file;
+              motor.leerYCargarJson(archivoJson);
+              btnEditarConfig.setEnabled(true);
        }//GEN-LAST:event_btnCargaDatosActionPerformed
 
        private void btnEditarConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarConfigActionPerformed
-              
+              EditorJson dialog = new EditorJson(archivoJson, motor, this);
+              dialog.setVisible(true);
        }//GEN-LAST:event_btnEditarConfigActionPerformed
+
+       private void btnReporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteErroresActionPerformed
+              ReporteErroresDialog dialog = new ReporteErroresDialog(motor.getAlmacenTokens().getListaTokens());
+              dialog.setVisible(true);
+       }//GEN-LAST:event_btnReporteErroresActionPerformed
 
        private File obtenerFile(String extension, File file) {
               JFileChooser chooserArchivo = new JFileChooser();
@@ -256,7 +314,6 @@ public class FramePrincipal extends javax.swing.JFrame {
               lineaDeNumeros.setEditable(false);
               lineaDeNumeros.setBackground(Color.MAGENTA);
               lineaDeNumeros.setFont(new Font("Monospaced", Font.PLAIN, 17));
-
               scrollpane.setRowHeaderView(lineaDeNumeros);
 
               // Escucha cambios en el documento
@@ -266,20 +323,46 @@ public class FramePrincipal extends javax.swing.JFrame {
                             actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
                             
                      }
-
                      @Override
                      public void removeUpdate(DocumentEvent e) {
                             actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
                      }
-
                      @Override
                      public void changedUpdate(DocumentEvent e) {
                             actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
                      }
               });
-
-              // Inicializa los números de línea al inicio
               actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
+       }
+
+
+
+
+       public void inicializarEscuchadorTextoEntrada() {
+              if (escuchadorActivado) {
+                     listener = new DocumentListener() {
+                            public void insertUpdate(DocumentEvent e) {
+                                   motor.realizarAccionesEdicionTexto(txtPaneEntrada);
+                            }
+                            public void removeUpdate(DocumentEvent e) {
+                                   motor.realizarAccionesEdicionTexto(txtPaneEntrada);
+                            }
+                            public void changedUpdate(DocumentEvent e) {
+                            
+                            }
+                     };
+                     txtPaneEntrada.getDocument().addDocumentListener(listener);
+              }
+       }
+
+       public void toggleEscuchador(boolean activar) {
+              if (activar && !escuchadorActivado) {
+                     txtPaneEntrada.getDocument().addDocumentListener(listener);
+                     escuchadorActivado = true;
+              } else if (!activar && escuchadorActivado) {
+                     txtPaneEntrada.getDocument().removeDocumentListener(listener);
+                     escuchadorActivado = false;
+              }
        }
 
        private void actualizarNumeroDeLinea(JTextArea lineaDeNumeros, JTextPane txtPane) {
@@ -298,19 +381,38 @@ public class FramePrincipal extends javax.swing.JFrame {
               }
        }
 
+       public static JTextPane getTxtPaneEntrada() {
+              return txtPaneEntrada;
+       }
 
+       public JTextPane getTxtPaneSalida() {
+              return txtPaneSalida;
+       }
+
+       public File getArchivoJson() {
+              return archivoJson;
+       }
+       
+       public void setArchivoJson(File file){
+              archivoJson=file;
+       }
+       
+       
+       
        // Variables declaration - do not modify//GEN-BEGIN:variables
        private javax.swing.JButton btnBuscar;
        private javax.swing.JButton btnCargaArchivo;
        private javax.swing.JButton btnCargaDatos;
        private javax.swing.JButton btnEditarConfig;
+       private javax.swing.JButton btnReporteErrores;
        private javax.swing.JPanel contenedor;
        private javax.swing.JPanel contenedorCarga;
        private javax.swing.JLabel lblEncabezado;
+       private javax.swing.JPanel panelReportes;
        private javax.swing.JScrollPane scrollPaneAreaEntrada;
        private javax.swing.JScrollPane scrollPaneSalida;
        private javax.swing.JTextField txtBusqueda;
-       private javax.swing.JTextPane txtPaneEntrada;
+       private static javax.swing.JTextPane txtPaneEntrada;
        private javax.swing.JTextPane txtPaneSalida;
        // End of variables declaration//GEN-END:variables
 }
