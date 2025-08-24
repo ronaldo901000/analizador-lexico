@@ -2,14 +2,18 @@ package com.ronaldo.analizadorlexico.backend;
 
 import com.ronaldo.analizadorlexico.backend.almacen.AlmacenPalabrasSimples;
 import com.ronaldo.analizadorlexico.backend.almacen.AlmacenTokens;
+import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.Verificador;
 import com.ronaldo.analizadorlexico.backend.carga.ProcesadorPalabras;
 import com.ronaldo.analizadorlexico.backend.comparacion.Comparador;
 import com.ronaldo.analizadorlexico.backend.lectura.CargadorDeTexto;
 import com.ronaldo.analizadorlexico.backend.complementos.Impresor;
+import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
 import com.ronaldo.analizadorlexico.backend.token.Token;
 import com.ronaldo.analizadorlexico.frontend.FramePrincipal;
+import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteGeneralDialogo;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTextPane;
 
@@ -66,6 +70,10 @@ public class Motor {
        }
        
 
+       /**
+        * 
+        * @param txtPaneEntrada 
+        */
        public void realizarAccionesEdicionTexto(JTextPane txtPaneEntrada) {
               if (hayJson) {
                      procesador.analizarTexto(txtPaneEntrada.getText(), txtPaneEntrada);
@@ -74,17 +82,63 @@ public class Motor {
 
        }
 
+       /**
+        * 
+        * @param textPane 
+        */
        public void colorear(JTextPane textPane) {
               List<Token> tokens = almacenTokens.getListaTokens();
               impresor.colorearToken(textPane, tokens.get(tokens.size() - 1));
 
        }
 
+       /**
+        * 
+        * @param archivo 
+        */
        public void leerYCargarJson(File archivo) {
               verificador.getArchivador().eliminarDefiniciones();
               verificador.leerConfiguracion(archivo);
               comparador.getSintaxis().setListaDefinicionTokens(verificador.getArchivador().getListadoDefinicionTokens());
               hayJson=true;
+       }
+       
+       public void crearReporteGeneral(){
+              int totalErrores=almacenTokens.getContadorErrores();
+              double porcentaje =almacenTokens.obtenerPorcentajeTokensValidos();
+              List<String> lista=traerTokensNoUsados();
+              String [] noUtilizados=new String[lista.size()];
+              for (int i = 0; i < lista.size(); i++) {
+                     noUtilizados[i]=lista.get(i);
+              }
+              ReporteGeneralDialogo dialog = new ReporteGeneralDialogo(totalErrores, porcentaje, noUtilizados);
+              dialog.setVisible(true);
+       }
+
+       public List<String> traerTokensNoUsados() {
+              List<DefinicionToken> definicionTokens = verificador.getArchivador().getListadoDefinicionTokens();
+              List<String> noUtilizados = new ArrayList<>(definicionTokens.size());
+              List<Token> tokens = almacenTokens.getListaTokens();
+              for (int i = 0; i < definicionTokens.size(); i++) {
+                     String tipoToken = definicionTokens.get(i).getNombre();
+                     if (!tipoToken.equals(TipoToken.COMENTARIO_LINEA.getNombre())
+                             && !tipoToken.equals(TipoToken.BLOQUE_INICIO.getNombre())
+                             && !tipoToken.equals(TipoToken.BLOQUE_FIN.getNombre())) {
+                            boolean fueEncontrado = false;
+                            for (int j = 0; j < tokens.size(); j++) {
+                                   if (tipoToken.equals(tokens.get(j).getTipo())) {
+                                          fueEncontrado = true;
+                                          break;
+                                   }
+                            }
+                            if (!fueEncontrado) {
+                                   noUtilizados.add(tipoToken + ", ");
+                            }
+                     }
+
+              }
+
+              return noUtilizados;
        }
 
        public CargadorDeTexto getCargador() {

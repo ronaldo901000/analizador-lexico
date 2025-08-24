@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ronaldo.analizadorlexico.backend.carga;
 
 import com.ronaldo.analizadorlexico.backend.Motor;
@@ -70,7 +66,7 @@ public class AnalizadorBloqueComentario {
                             if (indiceFin != -1) {
                                    bloqueAcumulado += lineaActual.substring(0, indiceFin + simboloFinBloque.length());
                                    Token token = new Token(TipoToken.BLOQUE_FIN.getNombre(),
-                                           Color.GREEN, bloqueAcumulado, numeroLinea, indiceFin, false);
+                                           new Color(0, 95, 0), bloqueAcumulado, numeroLinea, indiceFin, false);
                                    token.setPosicionCaracter(posicionGlobalCaracter);
                                    motor.getImpresor().colorearToken(textPane, token);
                                    return;

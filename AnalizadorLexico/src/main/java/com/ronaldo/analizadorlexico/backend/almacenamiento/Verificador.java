@@ -39,10 +39,21 @@ public class Verificador {
                                    obtenerTipo(linea);
                             }
                      }
-
+                     crearDefinicionesPorDefecto();
               } catch (IOException e) {
                      e.printStackTrace();
               }
+       }
+
+       public void crearDefinicionesPorDefecto() {
+              DefinicionToken definicionToken = new DefinicionToken(TipoToken.CADENA.getNombre());
+              archivador.agregarDefinicion(definicionToken);
+              DefinicionToken definicionToken2 = new DefinicionToken(TipoToken.IDENTIFICADOR.getNombre());
+              archivador.agregarDefinicion(definicionToken2);
+              DefinicionToken definicionToken3 = new DefinicionToken(TipoToken.NUMERO_ENTERO.getNombre());
+              archivador.agregarDefinicion(definicionToken3);
+              DefinicionToken definicionToken4 = new DefinicionToken(TipoToken.NUMERO_DECIMAL.getNombre());
+              archivador.agregarDefinicion(definicionToken4);
        }
 
        /**
@@ -61,7 +72,8 @@ public class Verificador {
                             return;
                      }
                      if (!token.equals(TipoToken.COMENTARIO_LINEA.getNombre())
-                             && !token.equals(TipoToken.BLOQUE_INICIO.getNombre()) && !token.endsWith(TipoToken.BLOQUE_FIN.getNombre())) {
+                             && !token.equals(TipoToken.BLOQUE_INICIO.getNombre()) && 
+                             !token.endsWith(TipoToken.BLOQUE_FIN.getNombre())) {
                             String elementos = texto.substring(llaveInicio, llavefin);
                             organizarTipo(token, elementos);
                      } else {
@@ -93,7 +105,7 @@ public class Verificador {
                      DefinicionToken definicionToken = new DefinicionToken(TipoToken.PUNTUACION.getNombre());
                      List<String> elementosPuntuacion = extraerSignosDePuntuacionEntreComillas(elementos);
                      definicionToken.setElementos(elementosPuntuacion);
-
+                     archivador.agregarDefinicion(definicionToken);
               }
               if (tipoToken.equals(TipoToken.AGRUPACION.getNombre())) {
                      DefinicionToken definicionToken = new DefinicionToken(TipoToken.AGRUPACION.getNombre());
@@ -142,25 +154,26 @@ public class Verificador {
         * @param texto
         * @return
         */
-       public static List<String> extraerSignosDePuntuacionEntreComillas(String texto) {
+       public List<String> extraerSignosDePuntuacionEntreComillas(String texto) {
               List<String> elementos = new ArrayList<>();
               int inicio = 0;
+              int contador = 0;
 
               while (true) {
+
                      inicio = texto.indexOf('"', inicio);
                      if (inicio == -1) {
                             break;
                      }
-
                      int fin = texto.indexOf('"', inicio + 1);
                      if (fin == -1) {
                             break;
                      }
-
                      String elemento = texto.substring(inicio + 1, fin);
                      elementos.add(elemento);
 
                      inicio = fin + 1;
+                     contador++;
               }
 
               return elementos;
@@ -182,7 +195,6 @@ public class Verificador {
                                    String elemento = valor.substring(inicio + 1, fin);
                                    definicion.agregarElemento(elemento);
                                    archivador.agregarDefinicion(definicion);
-                                   System.out.println(elemento);
                             }
 
                      }

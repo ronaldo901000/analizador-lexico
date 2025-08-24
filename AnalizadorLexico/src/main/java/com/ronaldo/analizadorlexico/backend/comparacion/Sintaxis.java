@@ -156,6 +156,16 @@ public class Sintaxis {
               }
               return false;
        }
+  
+       public boolean esDePuntuacion(String elemento) {
+              DefinicionToken puntuacion = obtenerDefincion(TipoToken.PUNTUACION.getNombre());
+              for (int i = 0; i < puntuacion.getElementos().size(); i++) {
+                     if (elemento.equals(puntuacion.getElementos().get(i))) {
+                            return true;
+                     }
+              }
+              return false;
+       }
 
        /**
         * 
@@ -183,6 +193,7 @@ public class Sintaxis {
                             return listaDefinicionTokens.get(i);
                      }
               }
+              System.out.println("no se encontro el archivo");
               return null;
        }
 
