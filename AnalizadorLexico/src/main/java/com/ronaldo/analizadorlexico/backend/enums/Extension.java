@@ -10,7 +10,8 @@ package com.ronaldo.analizadorlexico.backend.enums;
  */
 public enum Extension {
        JSON("json"),
-       TXT("txt");
+       TXT("txt"),
+       CSV("csv");
 
        private String extension;
 

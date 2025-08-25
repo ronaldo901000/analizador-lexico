@@ -12,6 +12,4 @@ public class Main {
            Motor motor= new Motor();
            motor.iniciar();
     }
-    
-    
 }

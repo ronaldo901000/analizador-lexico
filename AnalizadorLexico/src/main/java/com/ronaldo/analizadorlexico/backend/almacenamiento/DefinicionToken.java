@@ -23,6 +23,7 @@ public class DefinicionToken {
               return nombre;
        }
 
+
        public List<String> getElementos() {
               return elementos;
        }
