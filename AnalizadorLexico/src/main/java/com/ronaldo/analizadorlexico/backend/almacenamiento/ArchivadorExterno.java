@@ -10,6 +10,16 @@ import java.util.List;
 public class ArchivadorExterno {
        private List<DefinicionToken> listadoDefinicionTokens;
        
+       
+       public DefinicionToken obtenerDefinicionEspecifica(String tipo) {
+              for (int i = 0; i < listadoDefinicionTokens.size(); i++) {
+                     if (listadoDefinicionTokens.get(i).getNombre().equals(tipo)) {
+                            return listadoDefinicionTokens.get(i);
+                     }
+              }
+              return null;
+       }
+       
        public ArchivadorExterno(){
               listadoDefinicionTokens= new ArrayList<>();
        }

@@ -10,6 +10,7 @@ public class Token {
        private int columna;
        private int posicionCaracter;
        private boolean esFinal;
+       private boolean yaSeReviso;
 
        public Token(String tipo,Color color, String lexema, int fila, int columna, boolean esFinal) {
               this.tipo=tipo;
@@ -54,6 +55,14 @@ public class Token {
 
        public void setPosicionCaracter(int posicionCaracter) {
               this.posicionCaracter = posicionCaracter;
+       }
+
+       public boolean isYaSeReviso() {
+              return yaSeReviso;
+       }
+
+       public void setYaSeReviso(boolean yaSeReviso) {
+              this.yaSeReviso = yaSeReviso;
        }
 
        

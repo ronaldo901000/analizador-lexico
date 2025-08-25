@@ -1,5 +1,6 @@
 package com.ronaldo.analizadorlexico.frontend.dialogs;
 
+import com.ronaldo.analizadorlexico.backend.ResumenLexema;
 import com.ronaldo.analizadorlexico.backend.token.Token;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -14,9 +15,10 @@ public class ReporteTokensDialog extends javax.swing.JDialog {
        /**
         * Creates new form ReporteTokensDialog
         */
-       public ReporteTokensDialog(List<Token> tokens) {
+       public ReporteTokensDialog(List<Token> tokens, List<ResumenLexema>resumenes) {
               initComponents();
               cargarTabla(tokens);
+              cargarTablaLexemas(resumenes);
        }
 
        /**
@@ -31,6 +33,10 @@ public class ReporteTokensDialog extends javax.swing.JDialog {
               jScrollPane1 = new javax.swing.JScrollPane();
               tablaTokens = new javax.swing.JTable();
               btnCerrar = new javax.swing.JButton();
+              jScrollPane2 = new javax.swing.JScrollPane();
+              tablaRecuento = new javax.swing.JTable();
+              jLabel2 = new javax.swing.JLabel();
+              jLabel3 = new javax.swing.JLabel();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
               setModal(true);
@@ -61,29 +67,61 @@ public class ReporteTokensDialog extends javax.swing.JDialog {
                      }
               });
 
+              tablaRecuento.setModel(new javax.swing.table.DefaultTableModel(
+                     new Object [][] {
+
+                     },
+                     new String [] {
+                            "Lexema", "Tipo Token", "Cantidad Repetida"
+                     }
+              ));
+              jScrollPane2.setViewportView(tablaRecuento);
+
+              jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+              jLabel2.setText("TODOS LO TOKENS");
+
+              jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+              jLabel3.setText("RECUENTO DE LEXEMAS");
+
               javax.swing.GroupLayout contenedorLayout = new javax.swing.GroupLayout(contenedor);
               contenedor.setLayout(contenedorLayout);
               contenedorLayout.setHorizontalGroup(
                      contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 932, Short.MAX_VALUE)
-                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorLayout.createSequentialGroup()
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                     .addGroup(contenedorLayout.createSequentialGroup()
+                            .addGap(327, 327, 327)
                             .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                      .addGroup(contenedorLayout.createSequentialGroup()
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 892, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                   .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 892, Short.MAX_VALUE)
+                                   .addComponent(jScrollPane2))
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                     .addGroup(contenedorLayout.createSequentialGroup()
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2)
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                     .addGroup(contenedorLayout.createSequentialGroup()
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3)
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               );
               contenedorLayout.setVerticalGroup(
                      contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(contenedorLayout.createSequentialGroup()
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(31, 31, 31)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
+                            .addGap(4, 4, 4)
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                             .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 33, Short.MAX_VALUE))
+                            .addContainerGap())
               );
 
               javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -94,9 +132,7 @@ public class ReporteTokensDialog extends javax.swing.JDialog {
               );
               layout.setVerticalGroup(
                      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                     .addGroup(layout.createSequentialGroup()
-                            .addComponent(contenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, Short.MAX_VALUE))
+                     .addComponent(contenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
               );
 
               pack();
@@ -118,11 +154,28 @@ public class ReporteTokensDialog extends javax.swing.JDialog {
 
               }
        }
+       
+       private void cargarTablaLexemas(List<ResumenLexema> resumenes) {
+              if (resumenes == null) {
+                     JOptionPane.showMessageDialog(this, "no hay errores para el reporte", "sin errores", JOptionPane.INFORMATION_MESSAGE);
+                     return;
+              }
+              DefaultTableModel modelo = (DefaultTableModel) tablaRecuento.getModel();
+              for (int i = 0; i < resumenes.size(); i++) {
+                     modelo.addRow(new Object[]{resumenes.get(i).getLexema(), resumenes.get(i).getTipo(),
+                            resumenes.get(i).getCantidadRepetida()});
+
+              }
+       }
        // Variables declaration - do not modify//GEN-BEGIN:variables
        private javax.swing.JButton btnCerrar;
        private javax.swing.JPanel contenedor;
        private javax.swing.JLabel jLabel1;
+       private javax.swing.JLabel jLabel2;
+       private javax.swing.JLabel jLabel3;
        private javax.swing.JScrollPane jScrollPane1;
+       private javax.swing.JScrollPane jScrollPane2;
+       private javax.swing.JTable tablaRecuento;
        private javax.swing.JTable tablaTokens;
        // End of variables declaration//GEN-END:variables
 }

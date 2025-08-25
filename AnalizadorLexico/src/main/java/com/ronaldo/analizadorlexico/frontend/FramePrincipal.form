@@ -248,6 +248,8 @@
                       <Component id="btnExportarTxt" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnExportarReportes" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="btnRecuperacionErrores" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -262,6 +264,7 @@
                           <Component id="btnReporteGeneral" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                           <Component id="btnExportarTxt" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                           <Component id="btnExportarReportes" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
+                          <Component id="btnRecuperacionErrores" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="26" max="32767" attributes="0"/>
                   </Group>
@@ -307,6 +310,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportarReportesActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnRecuperacionErrores">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Recuperar De Errores"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRecuperacionErroresActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
