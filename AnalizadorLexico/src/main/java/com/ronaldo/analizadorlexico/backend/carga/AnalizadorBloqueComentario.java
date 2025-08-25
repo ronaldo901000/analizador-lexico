@@ -12,7 +12,7 @@ import javax.swing.JTextPane;
  * @author ronaldo
  */
 public class AnalizadorBloqueComentario {
-
+       private final char SALTO_LINEA='\n';
        private Motor motor;
        private ProcesadorPalabras procesador;
 
@@ -43,7 +43,7 @@ public class AnalizadorBloqueComentario {
                                           if (posicionCierre == -1) {
                                                  return -1;
                                           }
-                                          String lexema = texto.substring(inicioBloque, posicionCierre + 1);
+                                          String lexema = texto.substring(inicioBloque, posicionCierre);
                                           Token token = new Token(TipoToken.BLOQUE_FIN.getNombre(),
                                                   new Color(0, 95, 0), lexema, 0, 0, true);
                                           token.setPosicionCaracter(inicioBloque);
@@ -64,7 +64,7 @@ public class AnalizadorBloqueComentario {
                      int longitudSimbolo = simboloCierre.length();
 
                      while (posicionBusqueda <= texto.length() - longitudSimbolo) {
-                            while (posicionBusqueda < texto.length() && texto.charAt(posicionBusqueda) == '\n') {
+                            while (posicionBusqueda < texto.length() && texto.charAt(posicionBusqueda) == SALTO_LINEA) {
                                    posicionBusqueda++;
                                    procesador.agregarLinea();
                                    procesador.setColumnaEnLinea(0);
@@ -79,11 +79,10 @@ public class AnalizadorBloqueComentario {
                                           break;
                                    }
                             }
-
                             if (coincide) {
-                                   return posicionBusqueda + longitudSimbolo - 1;
+                                   procesador.setColumnaEnLinea(posicionBusqueda);
+                                   return posicionBusqueda + longitudSimbolo;
                             }
-
                             posicionBusqueda++;
                      }
               }
