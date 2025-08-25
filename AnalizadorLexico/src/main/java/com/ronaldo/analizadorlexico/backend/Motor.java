@@ -1,6 +1,6 @@
 package com.ronaldo.analizadorlexico.backend;
 
-import com.ronaldo.analizadorlexico.backend.almacen.AlmacenPalabrasSimples;
+import com.ronaldo.analizadorlexico.backend.almacen.AlmacenResumenLexemas;
 import com.ronaldo.analizadorlexico.backend.almacen.AlmacenTokens;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.Verificador;
@@ -29,17 +29,19 @@ public class Motor {
        private Impresor impresor;
        private Verificador verificador;
        private Comparador comparador;
-       private AlmacenPalabrasSimples almacenSimples;
+       private AlmacenResumenLexemas almacenSimples;
        private ProcesadorPalabras procesador;
        private boolean hayJson;
        private Escritor escritor;
+       private ContadorLexemas contador;
 
        public void iniciar() {
+              contador= new ContadorLexemas();
               procesador= new ProcesadorPalabras(this);
               almacenTokens = new AlmacenTokens();
-              almacenSimples = new AlmacenPalabrasSimples();
+              almacenSimples = new AlmacenResumenLexemas();
               impresor = new Impresor();
-              comparador = new Comparador(almacenTokens, almacenSimples.getPalabrasSimples());
+              comparador = new Comparador(almacenTokens);
               cargador = new CargadorDeTexto();
               verificador = new Verificador();
               escritor = new Escritor();
@@ -51,11 +53,6 @@ public class Motor {
               impresor.imprimirBusqueda(almacenTokens.getListaTokens(), txtPane, palabraBuscada);
        }
 
-       public void iniciarCreacionTokens() {
-              comparador.setListaDefinicionTokens(verificador.getArchivador().getListadoDefinicionTokens());
-
-              comparador.iniciarComparacion();
-       }
 
        /**
         * metodo que se encarga de controlar la peticion del frame de analizar, generar tokens y pintar las palabras
@@ -190,12 +187,18 @@ public class Motor {
               this.almacenTokens = almacenTokens;
        }
 
-       public AlmacenPalabrasSimples getAlmacenSimples() {
+       public AlmacenResumenLexemas getAlmacenSimples() {
               return almacenSimples;
        }
 
-       public void setAlmacenSimples(AlmacenPalabrasSimples almacenSimples) {
+       public void setAlmacenSimples(AlmacenResumenLexemas almacenSimples) {
               this.almacenSimples = almacenSimples;
        }
+
+       public ContadorLexemas getContador() {
+              return contador;
+       }
+       
+       
 
 }

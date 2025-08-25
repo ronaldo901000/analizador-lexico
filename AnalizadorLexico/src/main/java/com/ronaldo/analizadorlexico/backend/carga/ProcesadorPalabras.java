@@ -1,7 +1,6 @@
 package com.ronaldo.analizadorlexico.backend.carga;
 
 import com.ronaldo.analizadorlexico.backend.Motor;
-import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
 import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
 import com.ronaldo.analizadorlexico.backend.lectura.PalabraSimple;
 import com.ronaldo.analizadorlexico.backend.token.Token;
@@ -13,13 +12,17 @@ import javax.swing.JTextPane;
  * @author ronaldo
  */
 public class ProcesadorPalabras {
-       private static final char COMILLAS='"';
-       private static final char ESPACIO=' ';
+
+       private static final char COMILLAS = '"';
+       private static final char ESPACIO = ' ';
        private Motor motor;
        private AnalizadorBloqueComentario analizadorBloque;
+       private int numeroLinea;
+       private int columnaEnLinea;
+
        public ProcesadorPalabras(Motor motor) {
               this.motor = motor;
-               analizadorBloque = new AnalizadorBloqueComentario(motor);
+              analizadorBloque = new AnalizadorBloqueComentario(motor,this);
        }
 
        /**
@@ -28,170 +31,135 @@ public class ProcesadorPalabras {
         * @param texto
         */
        public void analizarTexto(String texto, JTextPane textPane) {
-              String[] lineas = texto.split("\n", -1);
-              int posicionCaracterEnMovimiento = 0;
-
-              // Elimina todos los tokens del almacen y el contador de errores
+              //se reinician todos los componentes 
               motor.getAlmacenTokens().getListaTokens().clear();
               motor.getAlmacenTokens().setContadorErrores(0);
+              int posicionActual = 0;
+              numeroLinea = 0;
+              columnaEnLinea = 0;
 
-              for (int numeroLinea = 0; numeroLinea < lineas.length; numeroLinea++) {
-                     String lineaActual = lineas[numeroLinea];
-                     int columnaActual = 0;
-                     int indiceCaracter = 0;
+              while (posicionActual < texto.length()) {
+                     char caracterActual = texto.charAt(posicionActual);
 
-                     while (indiceCaracter < lineaActual.length()) {
-                            char caracterActual = lineaActual.charAt(indiceCaracter);
+                     if (caracterActual == '\n') {
+                            numeroLinea++;
+                            columnaEnLinea = 0;
+                            posicionActual++;
+                            continue;
+                     }
 
-                            if (analizadorBloque.hayCaracterInicioBloque(caracterActual, lineaActual, indiceCaracter)) {
-                                   String[] lineasDesdeInicioBloque = analizadorBloque.obtenerLineas(lineas, indiceCaracter, numeroLinea);
-                                   analizadorBloque.aplicarBloqueFin(lineasDesdeInicioBloque,
-                                           posicionCaracterEnMovimiento + columnaActual,
-                                           textPane);
+                     int nuevaPosicion = analizadorBloque.verificarSiHayBloqueComentario(
+                             caracterActual, texto, posicionActual, textPane, numeroLinea, columnaEnLinea);
 
-                                   indiceCaracter = lineaActual.length();
-                            }
+                     if (nuevaPosicion != -1) {
+                            int caracteresAvanzados = nuevaPosicion - posicionActual;
+                            columnaEnLinea += caracteresAvanzados;
+                            posicionActual = nuevaPosicion;
+                            continue;
+                     }
 
-                            if (elCaracterPerteneceComentarioDeLinea(caracterActual, lineaActual, indiceCaracter)) {
-                                   int inicio = indiceCaracter;
-                                   int fin = lineaActual.length();
-                                   String restoDeLinea = lineaActual.substring(inicio, fin);
-                                   Token token = new Token(TipoToken.COMENTARIO_LINEA.getNombre(), new Color(0, 95, 0), restoDeLinea, numeroLinea, columnaActual, true);
-                                   token.setPosicionCaracter(posicionCaracterEnMovimiento + columnaActual);
-                                   motor.getImpresor().colorearToken(textPane, token);
-                                   break;
-                            }
+                     if (elCaracterPerteneceComentarioDeLinea(caracterActual, texto, posicionActual)) {
+                            int inicioComentario = posicionActual;
                             
-                            if (caracterActual == COMILLAS) {
-                                   int posicionFinCadena = encontrarFinCadena(lineaActual, indiceCaracter);
-                                   String cadenaCompleta = lineaActual.substring(indiceCaracter, posicionFinCadena + 1);
-                                   PalabraSimple palabra = new PalabraSimple(cadenaCompleta, numeroLinea, columnaActual);
-                                   palabra.setPosicionCaracter(posicionCaracterEnMovimiento + columnaActual);
-                                   palabra.setEsFinal(esFinalDeFila(lineaActual, posicionFinCadena+1));
-                                   motor.getComparador().evaluarTipoToken(palabra);
-                                   columnaActual += cadenaCompleta.length();
-                                   indiceCaracter = posicionFinCadena + 1;
-
-                            } else if (caracterActual == ESPACIO) {
-                                   columnaActual++;
-                                   indiceCaracter++;
-                            } else {
-                                   
-                                   int posicionFinLexema = obtenerFinLexema(lineaActual, indiceCaracter);
-                                   String lexemaActual = lineaActual.substring(indiceCaracter, posicionFinLexema);
-
-                                   PalabraSimple palabra = new PalabraSimple(lexemaActual, numeroLinea, columnaActual);
-                                   palabra.setPosicionCaracter(posicionCaracterEnMovimiento + columnaActual);
-                                   palabra.setEsFinal(esFinalDeFila(lineaActual, posicionFinLexema));
-                                   motor.getComparador().evaluarTipoToken(palabra);
-
-                                   columnaActual += lexemaActual.length();
-                                   indiceCaracter = posicionFinLexema;
+                            while (posicionActual < texto.length() && texto.charAt(posicionActual) != '\n') {
+                                   posicionActual++;
                             }
+
+                            String comentario = texto.substring(inicioComentario, posicionActual);
+                            Token token = new Token(
+                                    TipoToken.COMENTARIO_LINEA.getNombre(),
+                                    new Color(0, 95, 0),comentario,numeroLinea,columnaEnLinea,true);
+                            token.setPosicionCaracter(inicioComentario);
+                            motor.getImpresor().colorearToken(textPane, token);
+
+                            columnaEnLinea += comentario.length();
                      }
 
-                     posicionCaracterEnMovimiento += lineaActual.length() + 1;
+                     if (caracterActual == COMILLAS) {
+                            int inicioCadena = posicionActual;
+                            posicionActual++; 
+                            columnaEnLinea++;
 
-              }
-       }
-
-       /**
-        *
-        * @param linea
-        * @param posicionInicio
-        * @return
-        */
-       private int encontrarFinCadena(String linea, int posicionInicio) {
-              int posicionActual = posicionInicio + 1;
-
-              while (posicionActual < linea.length()) {
-                     if (linea.charAt(posicionActual) == COMILLAS) {
-                            return posicionActual;
-                     }
-                     posicionActual++;
-              }
-
-              return linea.length() - 1;
-       }
-
-       /**
-        *
-        * @param linea
-        * @param posicionInicio
-        * @return
-        */
-       //
-       private int obtenerFinLexema(String linea, int posicionInicio) {
-              int posicionActual = posicionInicio;
-
-              while (posicionActual < linea.length()) {
-                     char caracterActual = linea.charAt(posicionActual);
-                     if (caracterActual == ESPACIO || caracterActual == COMILLAS) {
-                            return posicionActual;
-                     }
-                     posicionActual++;
-              }
-
-              return linea.length();
-       }
-
-       /**
-        *
-        * @param c
-        * @param linea
-        * @param posicionActual
-        * @return
-        */
-       private boolean elCaracterPerteneceComentarioDeLinea(char c, String linea, int posicionActual) {
-              for (int i = 0; i < motor.getVerificador().getArchivador().getListadoDefinicionTokens().size(); i++) {
-                     DefinicionToken definicion = motor.getVerificador().getArchivador().getListadoDefinicionTokens().get(i);
-
-                     if (definicion.getNombre().equals(TipoToken.COMENTARIO_LINEA.getNombre())) {
-                            for (int j = 0; j < definicion.getElementos().size(); j++) {
-                                   String simboloComentario = definicion.getElementos().get(j);
-
-                                   // Verificar si el caracter actual coincide con el primer caracter del simbolo
-                                   if (simboloComentario.charAt(0) == c) {
-                                          if (siEsComentarioDeLinea(linea, posicionActual, simboloComentario)) {
-                                                 return true;
+                            
+                            while (posicionActual < texto.length()) {
+                                   if (texto.charAt(posicionActual) == COMILLAS) {
+                                          
+                                          if (posicionActual == 0 || texto.charAt(posicionActual - 1) != '\\') {
+                                                 break;
                                           }
                                    }
+                                   posicionActual++;
                             }
+
+                            if (posicionActual < texto.length()) {
+                                   posicionActual++; 
+                                   String cadenaCompleta = texto.substring(inicioCadena, posicionActual);
+
+                                   PalabraSimple palabra = new PalabraSimple(cadenaCompleta, numeroLinea, columnaEnLinea);
+                                   palabra.setPosicionCaracter(inicioCadena);
+                                   palabra.setEsFinal(posicionActual >= texto.length() || texto.charAt(posicionActual) == '\n');
+                                   motor.getComparador().evaluarTipoToken(palabra);
+
+                                   columnaEnLinea += cadenaCompleta.length();
+                            }
+                     }
+
+                     if (caracterActual == ESPACIO) {
+                            columnaEnLinea++;
+                            posicionActual++;
+                            continue;
+                     }
+
+                     int inicioLexema = posicionActual;
+                     while (posicionActual < texto.length()) {
+                            char c = texto.charAt(posicionActual);
+                            if (c == ESPACIO || c == '\n' || c == COMILLAS) {
+                                   break;
+                            }
+                            posicionActual++;
+                     }
+
+                     if (inicioLexema < posicionActual) {
+                            String lexemaActual = texto.substring(inicioLexema, posicionActual);
+
+                            PalabraSimple palabra = new PalabraSimple(lexemaActual, numeroLinea, columnaEnLinea);
+                            palabra.setPosicionCaracter(inicioLexema);
+                            palabra.setEsFinal(posicionActual >= texto.length() || texto.charAt(posicionActual) == '\n');
+                            motor.getComparador().evaluarTipoToken(palabra);
+
+                            columnaEnLinea += lexemaActual.length();
+                     }
+              }
+       }
+
+       private boolean elCaracterPerteneceComentarioDeLinea(char caracter, String texto, int posicion) {
+              if (caracter == '/') {
+                     // Verificar si el siguiente carácter es también '/'
+                     if (posicion + 1 < texto.length() && texto.charAt(posicion + 1) == '/') {
+                            return true;
                      }
               }
               return false;
        }
 
-       /**
-        *
-        * @param linea
-        * @param posicionInicial
-        * @param simboloComentario
-        * @return
-        */
-       private boolean siEsComentarioDeLinea(String linea, int posicionInicial, String simboloComentario) {
-              if (posicionInicial + simboloComentario.length() > linea.length()) {
-                     return false;
-              }
-              // Verificar caracter por caracter del comentario de comentario
-              for (int i = 0; i < simboloComentario.length(); i++) {
-                     char caracterSimbolo = simboloComentario.charAt(i);
-                     char caracterLinea = linea.charAt(posicionInicial + i);
-
-                     if (caracterSimbolo != caracterLinea) {
-                            return false;
-                     }
-              }
-
-              return true;
+       public void agregarLinea(){
+              numeroLinea++;
+       }
+       public int getNumeroLinea() {
+              return numeroLinea;
        }
 
-       private boolean esFinalDeFila(String linea, int ultimoIndice) {
-              if (ultimoIndice == linea.trim().length()) {
-                     return true;
-              } else {
-                     return false;
-              }
+       public void setNumeroLinea(int numeroLinea) {
+              this.numeroLinea = numeroLinea;
        }
 
+       public int getColumnaEnLinea() {
+              return columnaEnLinea;
+       }
+
+       public void setColumnaEnLinea(int columnaEnLinea) {
+              this.columnaEnLinea = columnaEnLinea;
+       }
+
+       
 }

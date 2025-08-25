@@ -73,6 +73,7 @@ public class FramePrincipal extends javax.swing.JFrame {
               btnReporteGeneral = new javax.swing.JButton();
               btnExportarTxt = new javax.swing.JButton();
               btnExportarReportes = new javax.swing.JButton();
+              btnRecuperacionErrores = new javax.swing.JButton();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -213,6 +214,13 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
+              btnRecuperacionErrores.setText("Recuperar De Errores");
+              btnRecuperacionErrores.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            btnRecuperacionErroresActionPerformed(evt);
+                     }
+              });
+
               javax.swing.GroupLayout panelReportesLayout = new javax.swing.GroupLayout(panelReportes);
               panelReportes.setLayout(panelReportesLayout);
               panelReportesLayout.setHorizontalGroup(
@@ -228,6 +236,8 @@ public class FramePrincipal extends javax.swing.JFrame {
                             .addComponent(btnExportarTxt)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btnExportarReportes)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnRecuperacionErrores)
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               );
               panelReportesLayout.setVerticalGroup(
@@ -239,7 +249,8 @@ public class FramePrincipal extends javax.swing.JFrame {
                                    .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnReporteGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnExportarTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                   .addComponent(btnExportarReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                   .addComponent(btnExportarReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                   .addComponent(btnRecuperacionErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addContainerGap(26, Short.MAX_VALUE))
               );
 
@@ -345,7 +356,9 @@ public class FramePrincipal extends javax.swing.JFrame {
 
        private void btnReporteTokensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteTokensActionPerformed
               if(motor.getAlmacenTokens().todosLosTokensSonCorrectos()){
-                     ReporteTokensDialog dialog = new ReporteTokensDialog(motor.getAlmacenTokens().getListaTokens());
+                     ReporteTokensDialog dialog = new ReporteTokensDialog
+                     (motor.getAlmacenTokens().getListaTokens(), motor.getContador().recontarLexemas
+                     (motor.getAlmacenTokens().getListaTokens()));
                      dialog.setVisible(true);
               }
               else{
@@ -392,6 +405,10 @@ public class FramePrincipal extends javax.swing.JFrame {
                      JOptionPane.showMessageDialog(null, " exportacion exitosa");
               }
        }//GEN-LAST:event_btnExportarReportesActionPerformed
+
+       private void btnRecuperacionErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecuperacionErroresActionPerformed
+              // TODO add your handling code here:
+       }//GEN-LAST:event_btnRecuperacionErroresActionPerformed
        
        private File obtenerFile(String extension, File file) {
               JFileChooser chooserArchivo = new JFileChooser();
@@ -500,6 +517,7 @@ public class FramePrincipal extends javax.swing.JFrame {
        private javax.swing.JButton btnEditarConfig;
        private javax.swing.JButton btnExportarReportes;
        private javax.swing.JButton btnExportarTxt;
+       private javax.swing.JButton btnRecuperacionErrores;
        private javax.swing.JButton btnReporteErrores;
        private javax.swing.JButton btnReporteGeneral;
        private javax.swing.JButton btnReporteTokens;

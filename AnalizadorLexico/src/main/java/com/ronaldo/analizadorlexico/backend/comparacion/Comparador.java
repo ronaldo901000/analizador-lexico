@@ -15,21 +15,16 @@ import java.util.List;
 public class Comparador {
        private AlmacenTokens almacen;
        private Sintaxis sintaxis;
-       private List <PalabraSimple> palabrasSimples;
+
        private List <DefinicionToken> listaDefinicionTokens;
        
-       public Comparador(AlmacenTokens almacen, List <PalabraSimple> palabrasSimples){
+       public Comparador(AlmacenTokens almacen){
               sintaxis= new Sintaxis();
               this.almacen=almacen;
-              this.palabrasSimples=palabrasSimples;
+
        }
        
-       public void iniciarComparacion(){
-              sintaxis.setListaDefinicionTokens(listaDefinicionTokens);
-              for (int i = 0; i < palabrasSimples.size(); i++) {
-                     evaluarTipoToken(palabrasSimples.get(i));
-              }
-       }
+
        
        /**
         * 
@@ -97,9 +92,6 @@ public class Comparador {
               this.sintaxis = sintaxis;
        }
 
-       public void setPalabrasSimples(List<PalabraSimple> palabrasSimples) {
-              this.palabrasSimples = palabrasSimples;
-       }
 
        public List<DefinicionToken> getListaDefinicionTokens() {
               return listaDefinicionTokens;
