@@ -9,6 +9,7 @@ import com.ronaldo.analizadorlexico.backend.comparacion.Comparador;
 import com.ronaldo.analizadorlexico.backend.lectura.CargadorDeTexto;
 import com.ronaldo.analizadorlexico.backend.complementos.Impresor;
 import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
+import com.ronaldo.analizadorlexico.backend.escritura.Escritor;
 import com.ronaldo.analizadorlexico.backend.token.Token;
 import com.ronaldo.analizadorlexico.frontend.FramePrincipal;
 import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteGeneralDialogo;
@@ -31,6 +32,7 @@ public class Motor {
        private AlmacenPalabrasSimples almacenSimples;
        private ProcesadorPalabras procesador;
        private boolean hayJson;
+       private Escritor escritor;
 
        public void iniciar() {
               procesador= new ProcesadorPalabras(this);
@@ -40,6 +42,7 @@ public class Motor {
               comparador = new Comparador(almacenTokens, almacenSimples.getPalabrasSimples());
               cargador = new CargadorDeTexto();
               verificador = new Verificador();
+              escritor = new Escritor();
               FramePrincipal frame = new FramePrincipal(this);
               frame.setVisible(true);
        }
@@ -139,6 +142,24 @@ public class Motor {
               }
 
               return noUtilizados;
+       }
+       
+       /**
+        * 
+        * @param file 
+        */
+       public void pedirExportacion(File file) {
+              List<Token> tokensErroneos = almacenTokens.darTokensErroneos();
+              if (tokensErroneos.size() > 0) {
+                     escritor.escribirReporteExportacion(null, file, tokensErroneos);
+              } else {
+                     escritor.escribirReporteExportacion(almacenTokens.getListaTokens(), file, null);
+              }
+
+       }
+
+       public void guardarCambiosTxt(File file, String texto){
+              escritor.reescribirArchivo(texto, file);
        }
 
        public CargadorDeTexto getCargador() {

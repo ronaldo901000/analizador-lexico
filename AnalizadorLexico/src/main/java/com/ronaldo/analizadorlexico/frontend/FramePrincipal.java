@@ -71,6 +71,8 @@ public class FramePrincipal extends javax.swing.JFrame {
               btnReporteErrores = new javax.swing.JButton();
               btnReporteTokens = new javax.swing.JButton();
               btnReporteGeneral = new javax.swing.JButton();
+              btnExportarTxt = new javax.swing.JButton();
+              btnExportarReportes = new javax.swing.JButton();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -163,13 +165,13 @@ public class FramePrincipal extends javax.swing.JFrame {
                                    .addComponent(btnEditarConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                    .addComponent(txtBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
                             .addGap(14, 14, 14))
               );
 
@@ -197,6 +199,20 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
+              btnExportarTxt.setText("Guardar Cambios Del Txt");
+              btnExportarTxt.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            btnExportarTxtActionPerformed(evt);
+                     }
+              });
+
+              btnExportarReportes.setText("Exportar Reportes");
+              btnExportarReportes.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            btnExportarReportesActionPerformed(evt);
+                     }
+              });
+
               javax.swing.GroupLayout panelReportesLayout = new javax.swing.GroupLayout(panelReportes);
               panelReportes.setLayout(panelReportesLayout);
               panelReportesLayout.setHorizontalGroup(
@@ -205,27 +221,33 @@ public class FramePrincipal extends javax.swing.JFrame {
                             .addGap(15, 15, 15)
                             .addComponent(btnReporteErrores)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnReporteTokens)
+                            .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnReporteGeneral)
+                            .addComponent(btnReporteGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnExportarTxt)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnExportarReportes)
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               );
               panelReportesLayout.setVerticalGroup(
                      panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(panelReportesLayout.createSequentialGroup()
-                            .addContainerGap(13, Short.MAX_VALUE)
+                            .addContainerGap(25, Short.MAX_VALUE)
                             .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                    .addComponent(btnReporteErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                   .addComponent(btnReporteGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(14, Short.MAX_VALUE))
+                                   .addComponent(btnReporteGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                   .addComponent(btnExportarTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                   .addComponent(btnExportarReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addContainerGap(26, Short.MAX_VALUE))
               );
 
               javax.swing.GroupLayout contenedorLayout = new javax.swing.GroupLayout(contenedor);
               contenedor.setLayout(contenedorLayout);
               contenedorLayout.setHorizontalGroup(
                      contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                     .addComponent(lblEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 949, Short.MAX_VALUE)
+                     .addComponent(lblEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 1264, Short.MAX_VALUE)
                      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorLayout.createSequentialGroup()
                             .addGap(17, 17, 17)
                             .addGroup(contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -239,8 +261,8 @@ public class FramePrincipal extends javax.swing.JFrame {
                             .addComponent(lblEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(contenedorCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGap(18, 18, 18)
-                            .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(16, 16, 16))
               );
 
@@ -288,6 +310,7 @@ public class FramePrincipal extends javax.swing.JFrame {
               if (archivo == null) {
                      return;
               }
+              fileEntrada=archivo;
               motor.getCargador().pedirLecturaArchivo(archivo, txtPaneEntrada);
               
               actualizarNumeroDeLinea(lineaDeNumerosEntrada, txtPaneEntrada);
@@ -334,6 +357,42 @@ public class FramePrincipal extends javax.swing.JFrame {
               motor.crearReporteGeneral();
        }//GEN-LAST:event_btnReporteGeneralActionPerformed
 
+       private void btnExportarTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarTxtActionPerformed
+              File archivo = obtenerArchivoParaGuardar("Guardar texto de entrada", Extension.TXT.getExtension());
+
+              if (archivo != null) {
+                     motor.guardarCambiosTxt(archivo, txtPaneEntrada.getText());
+                     JOptionPane.showMessageDialog(null, "Archivo guardado exitosamente");
+              }
+       }//GEN-LAST:event_btnExportarTxtActionPerformed
+
+       private File obtenerArchivoParaGuardar(String titulo, String extension) {
+              JFileChooser fileChooser = new JFileChooser();
+              fileChooser.setDialogTitle(titulo);
+              
+              int resultado = fileChooser.showSaveDialog(null);
+              
+              if (resultado == JFileChooser.APPROVE_OPTION) {
+                     File archivo = fileChooser.getSelectedFile();
+                     
+                     if (extension != null && !archivo.getName().contains(".")) {
+                            archivo = new File(archivo.getAbsolutePath() + "." + extension);
+                     }
+                     
+                     return archivo;
+              }
+              
+              return null;
+       }
+       private void btnExportarReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarReportesActionPerformed
+              File archivo = obtenerArchivoParaGuardar("Exportar reporte ",Extension.CSV.getExtension());
+              
+              if (archivo != null) {
+                     motor.pedirExportacion(archivo);
+                     JOptionPane.showMessageDialog(null, " exportacion exitosa");
+              }
+       }//GEN-LAST:event_btnExportarReportesActionPerformed
+       
        private File obtenerFile(String extension, File file) {
               JFileChooser chooserArchivo = new JFileChooser();
               chooserArchivo.setDialogTitle("Archivo ");
@@ -406,14 +465,11 @@ public class FramePrincipal extends javax.swing.JFrame {
        private void actualizarNumeroDeLinea(JTextArea lineaDeNumeros, JTextPane txtPane) {
               try {
                      int totalLineas = txtPane.getDocument().getDefaultRootElement().getElementCount();
-
                      String numeros = "";
                      for (int i = 1; i <= totalLineas; i++) {
                             numeros += i + "\n";
                      }
-
                      lineaDeNumeros.setText(numeros);
-
               } catch (Exception e) {
                      lineaDeNumeros.setText("1");
               }
@@ -442,6 +498,8 @@ public class FramePrincipal extends javax.swing.JFrame {
        private javax.swing.JButton btnCargaArchivo;
        private javax.swing.JButton btnCargaDatos;
        private javax.swing.JButton btnEditarConfig;
+       private javax.swing.JButton btnExportarReportes;
+       private javax.swing.JButton btnExportarTxt;
        private javax.swing.JButton btnReporteErrores;
        private javax.swing.JButton btnReporteGeneral;
        private javax.swing.JButton btnReporteTokens;

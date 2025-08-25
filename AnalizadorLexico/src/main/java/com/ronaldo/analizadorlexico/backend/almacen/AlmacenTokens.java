@@ -1,6 +1,5 @@
 package com.ronaldo.analizadorlexico.backend.almacen;
 
-import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
 import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
 import com.ronaldo.analizadorlexico.backend.token.Token;
 import java.util.ArrayList;
@@ -71,5 +70,18 @@ public class AlmacenTokens {
                      }
               }
               return contador;
+       }
+
+       public List<Token> darTokensErroneos() {
+              if (listaTokens == null) {
+                     return null;
+              }
+              List<Token> tokensErroneo = new ArrayList<>(listaTokens.size());
+              for (int i = 0; i < listaTokens.size(); i++) {
+                     if (listaTokens.get(i).getTipo().equals(TipoToken.ERROR.getNombre())) {
+                            tokensErroneo.add(listaTokens.get(i));
+                     }
+              }
+              return tokensErroneo;
        }
 }

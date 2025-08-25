@@ -112,7 +112,7 @@ public class EditorJson extends javax.swing.JDialog {
 
        private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
               String texto = txtPaneEntrada.getText();
-              frame.setArchivoJson(escritor.reescribirJson(texto, file));
+              frame.setArchivoJson(escritor.reescribirArchivo(texto, file));
               motor.leerYCargarJson(frame.getArchivoJson());
               JOptionPane.showMessageDialog(this, "Edicion exitosa", "edicion de configuracion", JOptionPane.INFORMATION_MESSAGE);
               this.dispose();
