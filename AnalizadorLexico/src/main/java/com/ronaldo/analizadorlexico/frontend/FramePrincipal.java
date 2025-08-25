@@ -341,12 +341,14 @@ public class FramePrincipal extends javax.swing.JFrame {
               }
               archivoJson = file;
               motor.leerYCargarJson(archivoJson);
+              motor.realizarAccionesEdicionTexto(txtPaneEntrada);
               btnEditarConfig.setEnabled(true);
        }//GEN-LAST:event_btnCargaDatosActionPerformed
 
        private void btnEditarConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarConfigActionPerformed
               EditorJson dialog = new EditorJson(archivoJson, motor, this);
               dialog.setVisible(true);
+              motor.realizarAccionesEdicionTexto(txtPaneEntrada);
        }//GEN-LAST:event_btnEditarConfigActionPerformed
 
        private void btnReporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteErroresActionPerformed
@@ -357,8 +359,8 @@ public class FramePrincipal extends javax.swing.JFrame {
        private void btnReporteTokensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteTokensActionPerformed
               if(motor.getAlmacenTokens().todosLosTokensSonCorrectos()){
                      ReporteTokensDialog dialog = new ReporteTokensDialog
-                     (motor.getAlmacenTokens().getListaTokens(), motor.getContador().recontarLexemas
-                     (motor.getAlmacenTokens().getListaTokens()));
+                     (motor.getAlmacenTokens().getListaTokens(), 
+                      motor.getContador().recontarLexemas(motor.getAlmacenTokens().getListaTokens()));
                      dialog.setVisible(true);
               }
               else{

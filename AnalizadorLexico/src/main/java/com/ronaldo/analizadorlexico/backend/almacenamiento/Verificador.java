@@ -115,14 +115,17 @@ public class Verificador {
               if (tipoToken.equals(TipoToken.COMENTARIO_LINEA.getNombre())) {
                      DefinicionToken definicionToken = new DefinicionToken(TipoToken.COMENTARIO_LINEA.getNombre());
                      procesarComentarios(elementos, definicionToken);
+                     archivador.agregarDefinicion(definicionToken);
               }
               if (tipoToken.equals(TipoToken.BLOQUE_INICIO.getNombre())) {
                      DefinicionToken definicionToken = new DefinicionToken(TipoToken.BLOQUE_INICIO.getNombre());
                      procesarComentarios(elementos, definicionToken);
+                     archivador.agregarDefinicion(definicionToken);
               }
               if (tipoToken.equals(TipoToken.BLOQUE_FIN.getNombre())) {
                      DefinicionToken definicionToken = new DefinicionToken(TipoToken.BLOQUE_FIN.getNombre());
                      procesarComentarios(elementos, definicionToken);
+                     archivador.agregarDefinicion(definicionToken);
               }
 
        }
@@ -157,10 +160,7 @@ public class Verificador {
        public List<String> extraerSignosDePuntuacionEntreComillas(String texto) {
               List<String> elementos = new ArrayList<>();
               int inicio = 0;
-              int contador = 0;
-
               while (true) {
-
                      inicio = texto.indexOf('"', inicio);
                      if (inicio == -1) {
                             break;
@@ -173,9 +173,7 @@ public class Verificador {
                      elementos.add(elemento);
 
                      inicio = fin + 1;
-                     contador++;
               }
-
               return elementos;
        }
 
@@ -188,13 +186,29 @@ public class Verificador {
               if (linea.contains(":")) {
                      String[] partes = linea.split(":");
                      if (partes.length == 2) {
-                            String valor = partes[1].trim();
-                            int inicio = valor.indexOf('"');
-                            int fin = valor.indexOf('"', inicio + 1);
-                            if (inicio != -1 && fin != -1) {
-                                   String elemento = valor.substring(inicio + 1, fin);
+                            String simbolos = partes[1].trim();
+                            List<String> elementos = new ArrayList<>();
+                            int inicio = 0;
+                            // Extraer todos los simbolos entre comillas
+                            while (true) {
+                                   inicio = simbolos.indexOf('"', inicio);
+                                   if (inicio == -1) {
+                                          break;
+                                   }
+
+                                   int fin = simbolos.indexOf('"', inicio + 1);
+                                   if (fin == -1) {
+                                          break;
+                                   }
+
+                                   String elemento = simbolos.substring(inicio + 1, fin);
+                                   elementos.add(elemento);
+
+                                   inicio = fin + 1;
+                            }
+
+                            for (String elemento : elementos) {
                                    definicion.agregarElemento(elemento);
-                                   archivador.agregarDefinicion(definicion);
                             }
 
                      }

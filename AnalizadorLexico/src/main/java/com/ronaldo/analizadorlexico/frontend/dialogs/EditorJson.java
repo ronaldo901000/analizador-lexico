@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package com.ronaldo.analizadorlexico.frontend.dialogs;
 
 import com.ronaldo.analizadorlexico.backend.Motor;
@@ -44,6 +40,7 @@ public class EditorJson extends javax.swing.JDialog {
               scollContenendor = new javax.swing.JScrollPane();
               txtPaneEntrada = new javax.swing.JTextPane();
               btnGuardar = new javax.swing.JButton();
+              jButton1 = new javax.swing.JButton();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
               setModal(true);
@@ -57,7 +54,9 @@ public class EditorJson extends javax.swing.JDialog {
               jLabel1.setText("EDICION CONFIG.JSON");
               jLabel1.setOpaque(true);
 
-              txtPaneEntrada.setFont(new java.awt.Font("Monospaced", 0, 22)); // NOI18N
+              scollContenendor.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+              txtPaneEntrada.setFont(new java.awt.Font("Monospaced", 0, 19)); // NOI18N
               scollContenendor.setViewportView(txtPaneEntrada);
 
               btnGuardar.setText("GUARDAR CAMBIOS");
@@ -67,17 +66,26 @@ public class EditorJson extends javax.swing.JDialog {
                      }
               });
 
+              jButton1.setText("SALIR");
+              jButton1.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            jButton1ActionPerformed(evt);
+                     }
+              });
+
               javax.swing.GroupLayout contenedorLayout = new javax.swing.GroupLayout(contenedor);
               contenedor.setLayout(contenedorLayout);
               contenedorLayout.setHorizontalGroup(
                      contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1057, Short.MAX_VALUE)
+                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1317, Short.MAX_VALUE)
                      .addGroup(contenedorLayout.createSequentialGroup()
                             .addContainerGap()
                             .addComponent(scollContenendor)
                             .addGap(17, 17, 17))
                      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorLayout.createSequentialGroup()
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               );
@@ -87,9 +95,11 @@ public class EditorJson extends javax.swing.JDialog {
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(32, 32, 32)
                             .addComponent(scollContenendor, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(28, 28, 28))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                   .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                                   .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(34, 34, 34))
               );
 
               javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -118,10 +128,15 @@ public class EditorJson extends javax.swing.JDialog {
               this.dispose();
        }//GEN-LAST:event_btnGuardarActionPerformed
 
+       private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+              this.dispose();
+       }//GEN-LAST:event_jButton1ActionPerformed
+
 
        // Variables declaration - do not modify//GEN-BEGIN:variables
        private javax.swing.JButton btnGuardar;
        private javax.swing.JPanel contenedor;
+       private javax.swing.JButton jButton1;
        private javax.swing.JLabel jLabel1;
        private javax.swing.JScrollPane scollContenendor;
        private javax.swing.JTextPane txtPaneEntrada;

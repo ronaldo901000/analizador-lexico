@@ -34,10 +34,10 @@ public class Comparador {
               try {
                      if (sintaxis.esComentarioLinea(palabraSimple.getCadena())) {
                             crearToken(palabraSimple, Color.GREEN, TipoToken.COMENTARIO_LINEA.getNombre());
-                     } else if (sintaxis.esCadena(palabraSimple.getCadena())) {
-                            crearToken(palabraSimple, Color.ORANGE, TipoToken.CADENA.getNombre());
                      } else if (sintaxis.esPalabraReservada(palabraSimple.getCadena())) {
                             crearToken(palabraSimple, Color.BLUE, TipoToken.PALABRA_RESERVADA.getNombre());
+                     } else if (sintaxis.esCadena(palabraSimple.getCadena())) {
+                            crearToken(palabraSimple, Color.ORANGE, TipoToken.CADENA.getNombre());
                      } else if (sintaxis.esDecimal(palabraSimple.getCadena())) {
                             crearToken(palabraSimple, Color.BLACK, TipoToken.NUMERO_DECIMAL.getNombre());
                      } else if (sintaxis.esNumero(palabraSimple.getCadena())) {

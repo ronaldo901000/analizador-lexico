@@ -48,12 +48,11 @@ public class ProcesadorPalabras {
                             numeroLinea++;
                             columnaEnLinea = 0;
                             posicionActual++;
-                     } 
-                     //espacio entre carateres
+                     } //espacio entre carateres
                      else if (caracterActual == ESPACIO) {
                             columnaEnLinea++;
                             posicionActual++;
-   
+
                      } else {
                             //bloque de comentario
                             int nuevaPosicion = analizadorBloque.verificarSiHayBloqueComentario(
@@ -94,28 +93,29 @@ public class ProcesadorPalabras {
                                           }
                                           posicionActual++;
                                    }
-
+                                   //si encuentra la comilla de cierre crea el token comilla
                                    if (comillaCierreEncontrada) {
-                                          String cadena=texto.substring(inicioCadena, posicionActual+1);
-                                          PalabraSimple palabra= new PalabraSimple(cadena, numeroLinea, columnaEnLinea);
+                                          String cadena = texto.substring(inicioCadena, posicionActual + 1);
+                                          PalabraSimple palabra = new PalabraSimple(cadena, numeroLinea, columnaEnLinea);
                                           palabra.setPosicionCaracter(inicioCadena);
                                           motor.getComparador().evaluarTipoToken(palabra);
                                           posicionActual++;
+                                          //crea un token de error
                                    } else {
                                           String cadenaIncompleta = texto.substring(inicioCadena, texto.length());
-                                          Token errorToken = new Token(TipoToken.ERROR.getNombre(),Color.RED, cadenaIncompleta,numeroLinea,columnaEnLinea,true);
+                                          Token errorToken = new Token(TipoToken.ERROR.getNombre(), Color.RED, cadenaIncompleta, numeroLinea, columnaEnLinea, true);
                                           errorToken.setPosicionCaracter(inicioCadena);
                                           motor.getAlmacenTokens().getListaTokens().add(errorToken);
                                           motor.getImpresor().colorearToken(textPane, errorToken);
-                                          
-                                          posicionActual = texto.length(); 
+
+                                          posicionActual = texto.length();
                                           columnaEnLinea += cadenaIncompleta.length();
                                    }
+                                   //analiza los demas lexemas
                             } else {
                                    int inicioLexema = posicionActual;
                                    while (posicionActual < texto.length()) {
                                           char c = texto.charAt(posicionActual);
-                                          //los espacios y  
                                           if (esSeparador(c)) {
                                                  break;
                                           }
