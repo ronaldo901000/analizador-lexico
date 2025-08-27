@@ -5,6 +5,7 @@ import com.ronaldo.analizadorlexico.backend.almacen.AlmacenTokens;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.Verificador;
 import com.ronaldo.analizadorlexico.backend.analisis.ProcesadorPalabras;
+import com.ronaldo.analizadorlexico.backend.busqueda.BuscadorDePatrones;
 import com.ronaldo.analizadorlexico.backend.comparacion.Comparador;
 import com.ronaldo.analizadorlexico.backend.lectura.CargadorDeTexto;
 import com.ronaldo.analizadorlexico.backend.complementos.Impresor;
@@ -29,30 +30,27 @@ public class Motor {
        private Impresor impresor;
        private Verificador verificador;
        private Comparador comparador;
-       private AlmacenResumenLexemas almacenSimples;
+       private AlmacenResumenLexemas almacenResumenLexemas;
        private ProcesadorPalabras procesador;
        private boolean hayJson;
        private Escritor escritor;
        private ContadorLexemas contador;
+       private BuscadorDePatrones buscador;
 
        public void iniciar() {
               contador= new ContadorLexemas();
               procesador= new ProcesadorPalabras(this);
               almacenTokens = new AlmacenTokens();
-              almacenSimples = new AlmacenResumenLexemas();
+              almacenResumenLexemas = new AlmacenResumenLexemas();
               impresor = new Impresor();
               comparador = new Comparador(almacenTokens);
               cargador = new CargadorDeTexto();
               verificador = new Verificador();
               escritor = new Escritor();
+              buscador= new BuscadorDePatrones(impresor);
               FramePrincipal frame = new FramePrincipal(this);
               frame.setVisible(true);
        }
-
-       public void buscarPalabra(JTextPane txtPane, String palabraBuscada) {
-              impresor.imprimirBusqueda(almacenTokens.getListaTokens(), txtPane, palabraBuscada);
-       }
-
 
        /**
         * metodo que se encarga de controlar la peticion del frame de analizar, generar tokens y pintar las palabras
@@ -84,16 +82,6 @@ public class Motor {
 
        /**
         * 
-        * @param textPane 
-        */
-       public void colorear(JTextPane textPane) {
-              List<Token> tokens = almacenTokens.getListaTokens();
-              impresor.colorearToken(textPane, tokens.get(tokens.size() - 1));
-
-       }
-
-       /**
-        * 
         * @param archivo 
         */
        public void leerYCargarJson(File archivo) {
@@ -115,7 +103,8 @@ public class Motor {
               dialog.setVisible(true);
        }
 
-       public List<String> traerTokensNoUsados() {
+       //metodo que se encarga de filtrar las definiciones de token que no se usaron
+       private List<String> traerTokensNoUsados() {
               List<DefinicionToken> definicionTokens = verificador.getArchivador().getListadoDefinicionTokens();
               List<String> noUtilizados = new ArrayList<>(definicionTokens.size());
               List<Token> tokens = almacenTokens.getListaTokens();
@@ -151,7 +140,6 @@ public class Motor {
                      if (almacenTokens.getListaTokens().get(i).getTipo().equals(TipoToken.ERROR.getNombre())) {
                             tokensErroneos.add(almacenTokens.getListaTokens().get(i));
                      }
-
               }
               if (tokensErroneos.size() > 0) {
                      escritor.escribirReporteExportacion(null, file, tokensErroneos, null);
@@ -195,17 +183,18 @@ public class Motor {
        }
 
        public AlmacenResumenLexemas getAlmacenSimples() {
-              return almacenSimples;
+              return almacenResumenLexemas;
        }
 
        public void setAlmacenSimples(AlmacenResumenLexemas almacenSimples) {
-              this.almacenSimples = almacenSimples;
+              this.almacenResumenLexemas = almacenSimples;
        }
 
        public ContadorLexemas getContador() {
               return contador;
        }
-       
-       
 
+       public BuscadorDePatrones getBuscador() {
+              return buscador;
+       }
 }

@@ -17,45 +17,6 @@ import javax.swing.text.StyledDocument;
 public class Impresor {
 
        /**
-        * metodo que se encarga de imprimir texto en el jtextArea y resalta la palabra buscada
-        *
-        * @param tokens
-        * @param txtArea
-        */
-       public void imprimirBusqueda(List<Token> tokens, JTextPane txtPane, String palabraBuscada) {
-              StyledDocument doc = txtPane.getStyledDocument();
-              Style estiloNormal = doc.addStyle("normal", null);
-              StyleConstants.setForeground(estiloNormal, Color.BLACK);
-
-              Style estiloResaltado = doc.addStyle("resaltado", null);
-              StyleConstants.setForeground(estiloResaltado, Color.RED);
-              StyleConstants.setBold(estiloResaltado, true);
-              StyleConstants.setBackground(estiloResaltado, Color.YELLOW);
-
-              try {
-                     doc.remove(0, doc.getLength());
-
-                     for (int i = 0; i < tokens.size(); i++) {
-                            Token token = tokens.get(i);
-                            String texto = token.getLexema();
-
-                            if (texto.equals(palabraBuscada)) {
-                                   doc.insertString(doc.getLength(), texto, estiloResaltado);
-                            } else {
-                                   doc.insertString(doc.getLength(), texto, estiloNormal);
-                            }
-                            if (token.isEsFinal()) {
-                                   doc.insertString(doc.getLength(), "\n", estiloNormal);
-                            } else {
-                                   doc.insertString(doc.getLength(), " ", estiloNormal);
-                            }
-                     }
-
-              } catch (BadLocationException ex) {
-                     ex.printStackTrace();
-              }
-       }
-       /**
         * 
         * @param textPane
         * @param token 
@@ -88,6 +49,33 @@ public class Impresor {
                      }
               });
        }
-      
+
+       /**
+        * 
+        * @param txtPane
+        * @param cadena
+        * @param esPatron 
+        */
+       public void imprimirLaBusqueda(JTextPane txtPane, String cadena, boolean esPatron) {
+              try {
+                     StyledDocument document = txtPane.getStyledDocument();
+
+                     Style estiloNormal = txtPane.addStyle("normal", null);
+                     StyleConstants.setForeground(estiloNormal, Color.BLACK);
+
+                     Style estiloResaltado = txtPane.addStyle("resaltado", null);
+                     StyleConstants.setForeground(estiloResaltado, Color.RED);
+                     StyleConstants.setBold(estiloResaltado, true);
+                     StyleConstants.setBackground(estiloResaltado, Color.YELLOW);
+
+                     if (esPatron) {
+                            document.insertString(document.getLength(), cadena, estiloResaltado);
+                     } else {
+                            document.insertString(document.getLength(), cadena, estiloNormal);
+                     }
+              } catch (BadLocationException ex) {
+                     ex.printStackTrace();
+              }
+       }
 
 }
