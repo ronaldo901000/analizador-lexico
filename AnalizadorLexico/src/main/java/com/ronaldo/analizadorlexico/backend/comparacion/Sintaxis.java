@@ -54,7 +54,7 @@ public class Sintaxis {
        public boolean esPalabraReservada(String elemento) throws DefinicionException{
               DefinicionToken palabraReservada = obtenerDefincion(TipoToken.PALABRA_RESERVADA.getNombre());
               if(palabraReservada==null){
-              
+                     
               }
               for (int i = 0; i < palabraReservada.getElementos().size(); i++) {
                      if (elemento.equals(palabraReservada.getElementos().get(i))) {
@@ -100,7 +100,7 @@ public class Sintaxis {
               return tienePunto && digitosDespuesPunto >= 1;
        }
 
-       private boolean esDigito(char c) {
+       public boolean esDigito(char c) {
               return c >= '0' && c <= '9';
        }
 
@@ -132,9 +132,14 @@ public class Sintaxis {
               if (elemento.length() == 0) {
                      return false;
               }
+              char primeraLetra=elemento.charAt(0);
+              if(!existeEnAlfabeto(primeraLetra)){
+                     return false;
+              }
+              
               for (int i = 0; i <elemento.length(); i++) {
                      char c = elemento.charAt(i);
-                     if(!existeEnAlfabeto(c)){
+                     if(!existeEnAlfabeto(c) && !esDigito(c)){
                             return false;
                      }
               }
@@ -176,7 +181,7 @@ public class Sintaxis {
         * @param c
         * @return 
         */
-       private boolean existeEnAlfabeto(char c) {
+       public boolean existeEnAlfabeto(char c) {
               for (char letra = 'a'; letra <= 'z'; letra++) {
                      if (c == letra) {
                             return true;

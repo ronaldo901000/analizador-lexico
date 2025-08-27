@@ -1,4 +1,4 @@
-package com.ronaldo.analizadorlexico.backend.carga;
+package com.ronaldo.analizadorlexico.backend.analisis;
 
 import com.ronaldo.analizadorlexico.backend.Motor;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
@@ -21,10 +21,13 @@ public class ProcesadorPalabras {
        private AnalizadorBloqueComentario analizadorBloque;
        private int numeroLinea;
        private int columnaEnLinea;
+       private CreadorDeTokens creador;
+       
 
        public ProcesadorPalabras(Motor motor) {
               this.motor = motor;
               analizadorBloque = new AnalizadorBloqueComentario(motor,this);
+              creador= new CreadorDeTokens(motor.getAlmacenTokens());
        }
 
        /**
@@ -70,8 +73,7 @@ public class ProcesadorPalabras {
                                    }
 
                                    String comentario = texto.substring(inicioComentario, posicionActual);
-                                   Token token = new Token(
-                                           TipoToken.COMENTARIO_LINEA.getNombre(),
+                                   Token token = new Token(TipoToken.COMENTARIO_LINEA.getNombre(),
                                            new Color(0, 95, 0), comentario, numeroLinea, columnaEnLinea, true);
                                    token.setPosicionCaracter(inicioComentario);
                                    motor.getImpresor().colorearToken(textPane, token);
@@ -111,7 +113,7 @@ public class ProcesadorPalabras {
                                           posicionActual = texto.length();
                                           columnaEnLinea += cadenaIncompleta.length();
                                    }
-                                   //analiza los demas lexemas
+                                   //se analizan los demas lexemas
                             } else {
                                    int inicioLexema = posicionActual;
                                    while (posicionActual < texto.length()) {

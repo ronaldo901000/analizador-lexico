@@ -1,7 +1,6 @@
 package com.ronaldo.analizadorlexico.backend.almacenamiento;
 
 import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
-import com.ronaldo.analizadorlexico.backend.exception.JsonException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -46,6 +45,7 @@ public class Verificador {
               }
        }
 
+       //metodo que crea las definiciones que no van el el json
        public void crearDefinicionesPorDefecto() {
               DefinicionToken definicionToken = new DefinicionToken(TipoToken.CADENA.getNombre());
               archivador.agregarDefinicion(definicionToken);

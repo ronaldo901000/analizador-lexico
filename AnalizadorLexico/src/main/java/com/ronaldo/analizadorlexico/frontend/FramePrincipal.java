@@ -5,18 +5,17 @@ import com.ronaldo.analizadorlexico.backend.enums.Extension;
 import com.ronaldo.analizadorlexico.frontend.dialogs.EditorJsonDialog;
 import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteErroresDialog;
 import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteTokensDialog;
-import java.awt.Color;
-import java.awt.Font;
 import java.io.File;
+import javax.swing.BoundedRangeModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
 
 
 /**
@@ -25,8 +24,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class FramePrincipal extends javax.swing.JFrame {
        private Motor motor;
-       private JTextArea lineaDeNumerosEntrada;
-       private JTextArea lineaDeNumerosSalida;
+
        private File fileEntrada;
        private File fileConfig;
        private boolean escuchadorActivado;
@@ -39,11 +37,9 @@ public class FramePrincipal extends javax.swing.JFrame {
        public FramePrincipal(Motor motor) {
               initComponents();
               escuchadorActivado=true;
-              lineaDeNumerosEntrada = new JTextArea("1");
-              lineaDeNumerosSalida = new JTextArea("1");
               this.motor = motor;
-              inicializarNumeroDeLineas(scrollPaneAreaEntrada, txtPaneEntrada, lineaDeNumerosEntrada);
-              inicializarNumeroDeLineas(scrollPaneSalida, txtPaneSalida, lineaDeNumerosSalida);
+              sincronizarScrollBar();
+              ocultarScrolls();
               inicializarEscuchadorTextoEntrada();
               toggleEscuchador(escuchadorActivado);
               btnEditarConfig.setEnabled(false);
@@ -59,38 +55,37 @@ public class FramePrincipal extends javax.swing.JFrame {
        private void initComponents() {
 
               contenedor = new javax.swing.JPanel();
-              lblEncabezado = new javax.swing.JLabel();
-              contenedorCarga = new javax.swing.JPanel();
+              contenedorGeneral = new javax.swing.JPanel();
               btnCargaArchivo = new javax.swing.JButton();
-              scrollPaneAreaEntrada = new javax.swing.JScrollPane();
-              txtPaneEntrada = new javax.swing.JTextPane();
               txtBusqueda = new javax.swing.JTextField();
               btnBuscar = new javax.swing.JButton();
-              scrollPaneSalida = new javax.swing.JScrollPane();
-              txtPaneSalida = new javax.swing.JTextPane();
               btnCargaDatos = new javax.swing.JButton();
               btnEditarConfig = new javax.swing.JButton();
+              contenedorEntrada = new javax.swing.JPanel();
+              scrollEntrada = new javax.swing.JScrollPane();
+              txtPaneEntrada = new javax.swing.JTextPane();
+              scrollLineasEntrada = new javax.swing.JScrollPane();
+              txtNumeracionEntrada = new javax.swing.JTextPane();
+              contenedorBusqueda = new javax.swing.JPanel();
+              scrollSalida = new javax.swing.JScrollPane();
+              txtPaneSalida = new javax.swing.JTextPane();
+              scrollLineaSalida = new javax.swing.JScrollPane();
+              txtPaneLineaBusqueda = new javax.swing.JTextPane();
+              btnLimpiar = new javax.swing.JButton();
               panelReportes = new javax.swing.JPanel();
               btnReporteErrores = new javax.swing.JButton();
               btnReporteTokens = new javax.swing.JButton();
               btnReporteGeneral = new javax.swing.JButton();
               btnExportarTxt = new javax.swing.JButton();
               btnExportarReportes = new javax.swing.JButton();
-              btnRecuperacionErrores = new javax.swing.JButton();
+              jLabel1 = new javax.swing.JLabel();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
               contenedor.setBackground(new java.awt.Color(255, 255, 204));
 
-              lblEncabezado.setBackground(new java.awt.Color(153, 51, 0));
-              lblEncabezado.setFont(new java.awt.Font("Ubuntu Sans Mono", 1, 48)); // NOI18N
-              lblEncabezado.setForeground(new java.awt.Color(0, 0, 0));
-              lblEncabezado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-              lblEncabezado.setText("ANALIZADOR LEXICO");
-              lblEncabezado.setOpaque(true);
-
-              contenedorCarga.setBackground(new java.awt.Color(204, 204, 204));
-              contenedorCarga.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+              contenedorGeneral.setBackground(new java.awt.Color(204, 204, 204));
+              contenedorGeneral.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
 
               btnCargaArchivo.setText("CARGAR ARCHIVO");
               btnCargaArchivo.addActionListener(new java.awt.event.ActionListener() {
@@ -99,27 +94,22 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
-              txtPaneEntrada.setFont(new java.awt.Font("Monospaced", 0, 17)); // NOI18N
-              scrollPaneAreaEntrada.setViewportView(txtPaneEntrada);
-
+              txtBusqueda.setFont(new java.awt.Font("Monospaced", 0, 19)); // NOI18N
+              txtBusqueda.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
               txtBusqueda.addActionListener(new java.awt.event.ActionListener() {
                      public void actionPerformed(java.awt.event.ActionEvent evt) {
                             txtBusquedaActionPerformed(evt);
                      }
               });
 
-              btnBuscar.setText("Buscar Palabra");
+              btnBuscar.setText("Buscar Patron");
               btnBuscar.addActionListener(new java.awt.event.ActionListener() {
                      public void actionPerformed(java.awt.event.ActionEvent evt) {
                             btnBuscarActionPerformed(evt);
                      }
               });
 
-              txtPaneSalida.setEditable(false);
-              txtPaneSalida.setFont(new java.awt.Font("Monospaced", 0, 17)); // NOI18N
-              scrollPaneSalida.setViewportView(txtPaneSalida);
-
-              btnCargaDatos.setText("CARGAR CONFIG");
+              btnCargaDatos.setText("CARGAR JSON");
               btnCargaDatos.addActionListener(new java.awt.event.ActionListener() {
                      public void actionPerformed(java.awt.event.ActionEvent evt) {
                             btnCargaDatosActionPerformed(evt);
@@ -133,50 +123,115 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
-              javax.swing.GroupLayout contenedorCargaLayout = new javax.swing.GroupLayout(contenedorCarga);
-              contenedorCarga.setLayout(contenedorCargaLayout);
-              contenedorCargaLayout.setHorizontalGroup(
-                     contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                     .addGroup(contenedorCargaLayout.createSequentialGroup()
+              contenedorEntrada.setForeground(new java.awt.Color(0, 0, 0));
+
+              txtPaneEntrada.setBackground(new java.awt.Color(255, 255, 255));
+              txtPaneEntrada.setBorder(null);
+              txtPaneEntrada.setFont(new java.awt.Font("Monospaced", 0, 19)); // NOI18N
+              scrollEntrada.setViewportView(txtPaneEntrada);
+
+              txtNumeracionEntrada.setEditable(false);
+              txtNumeracionEntrada.setBackground(new java.awt.Color(255, 153, 0));
+              txtNumeracionEntrada.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+              txtNumeracionEntrada.setFont(new java.awt.Font("Monospaced", 0, 19)); // NOI18N
+              txtNumeracionEntrada.setForeground(new java.awt.Color(0, 0, 0));
+              txtNumeracionEntrada.setText("1");
+              txtNumeracionEntrada.setAutoscrolls(false);
+              scrollLineasEntrada.setViewportView(txtNumeracionEntrada);
+
+              javax.swing.GroupLayout contenedorEntradaLayout = new javax.swing.GroupLayout(contenedorEntrada);
+              contenedorEntrada.setLayout(contenedorEntradaLayout);
+              contenedorEntradaLayout.setHorizontalGroup(
+                     contenedorEntradaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorEntradaLayout.createSequentialGroup()
+                            .addComponent(scrollLineasEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(scrollEntrada))
+              );
+              contenedorEntradaLayout.setVerticalGroup(
+                     contenedorEntradaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                     .addComponent(scrollEntrada)
+                     .addComponent(scrollLineasEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+              );
+
+              txtPaneSalida.setBackground(new java.awt.Color(255, 255, 255));
+              txtPaneSalida.setFont(new java.awt.Font("Monospaced", 0, 19)); // NOI18N
+              txtPaneSalida.setForeground(new java.awt.Color(0, 0, 0));
+              scrollSalida.setViewportView(txtPaneSalida);
+
+              txtPaneLineaBusqueda.setBackground(new java.awt.Color(255, 204, 0));
+              txtPaneLineaBusqueda.setFont(new java.awt.Font("Monospaced", 0, 19)); // NOI18N
+              scrollLineaSalida.setViewportView(txtPaneLineaBusqueda);
+
+              javax.swing.GroupLayout contenedorBusquedaLayout = new javax.swing.GroupLayout(contenedorBusqueda);
+              contenedorBusqueda.setLayout(contenedorBusquedaLayout);
+              contenedorBusquedaLayout.setHorizontalGroup(
+                     contenedorBusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorBusquedaLayout.createSequentialGroup()
+                            .addComponent(scrollLineaSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(scrollSalida))
+              );
+              contenedorBusquedaLayout.setVerticalGroup(
+                     contenedorBusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                     .addComponent(scrollSalida)
+                     .addComponent(scrollLineaSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+              );
+
+              btnLimpiar.setText("Limpiar");
+              btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            btnLimpiarActionPerformed(evt);
+                     }
+              });
+
+              javax.swing.GroupLayout contenedorGeneralLayout = new javax.swing.GroupLayout(contenedorGeneral);
+              contenedorGeneral.setLayout(contenedorGeneralLayout);
+              contenedorGeneralLayout.setHorizontalGroup(
+                     contenedorGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                     .addGroup(contenedorGeneralLayout.createSequentialGroup()
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorCargaLayout.createSequentialGroup()
-                            .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                   .addGroup(contenedorCargaLayout.createSequentialGroup()
-                                          .addGap(18, 18, 18)
-                                          .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                 .addComponent(scrollPaneSalida)
-                                                 .addComponent(scrollPaneAreaEntrada)))
-                                   .addGroup(contenedorCargaLayout.createSequentialGroup()
-                                          .addGap(40, 40, 40)
+                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorGeneralLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(contenedorGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                   .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorGeneralLayout.createSequentialGroup()
+                                          .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                          .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                           .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                           .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                           .addComponent(btnCargaDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                           .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                           .addComponent(btnEditarConfig)
-                                          .addGap(3, 3, 3)))
-                            .addGap(37, 37, 37))
+                                          .addGap(40, 40, 40))
+                                   .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorGeneralLayout.createSequentialGroup()
+                                          .addComponent(contenedorEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                          .addContainerGap())
+                                   .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorGeneralLayout.createSequentialGroup()
+                                          .addComponent(contenedorBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                          .addContainerGap())))
               );
-              contenedorCargaLayout.setVerticalGroup(
-                     contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                     .addGroup(contenedorCargaLayout.createSequentialGroup()
-                            .addGap(14, 14, 14)
-                            .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              contenedorGeneralLayout.setVerticalGroup(
+                     contenedorGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                     .addGroup(contenedorGeneralLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(contenedorGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                    .addComponent(btnCargaDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnEditarConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                   .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                   .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                   .addComponent(btnLimpiar))
+                            .addGap(15, 15, 15)
+                            .addComponent(contenedorEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(15, 15, 15)
+                            .addGroup(contenedorGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                   .addComponent(txtBusqueda)
+                                   .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                   .addComponent(txtBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-                                   .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
-                            .addGap(14, 14, 14))
+                            .addComponent(contenedorBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap())
               );
 
               panelReportes.setBackground(new java.awt.Color(0, 153, 153));
@@ -217,19 +272,12 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
-              btnRecuperacionErrores.setText("Recuperar De Errores");
-              btnRecuperacionErrores.addActionListener(new java.awt.event.ActionListener() {
-                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                            btnRecuperacionErroresActionPerformed(evt);
-                     }
-              });
-
               javax.swing.GroupLayout panelReportesLayout = new javax.swing.GroupLayout(panelReportes);
               panelReportes.setLayout(panelReportesLayout);
               panelReportesLayout.setHorizontalGroup(
                      panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(panelReportesLayout.createSequentialGroup()
-                            .addContainerGap(71, Short.MAX_VALUE)
+                            .addContainerGap(154, Short.MAX_VALUE)
                             .addComponent(btnReporteErrores)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -239,45 +287,51 @@ public class FramePrincipal extends javax.swing.JFrame {
                             .addComponent(btnExportarTxt)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btnExportarReportes)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnRecuperacionErrores)
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addContainerGap(154, Short.MAX_VALUE))
               );
               panelReportesLayout.setVerticalGroup(
                      panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(panelReportesLayout.createSequentialGroup()
-                            .addContainerGap(17, Short.MAX_VALUE)
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                    .addComponent(btnReporteErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnReporteGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnExportarTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                   .addComponent(btnExportarReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                   .addComponent(btnRecuperacionErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(17, Short.MAX_VALUE))
+                                   .addComponent(btnExportarReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               );
+
+              jLabel1.setBackground(new java.awt.Color(153, 51, 0));
+              jLabel1.setFont(new java.awt.Font("Ubuntu Sans Mono", 1, 36)); // NOI18N
+              jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+              jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+              jLabel1.setText("ANALIZADOR LEXICO");
+              jLabel1.setOpaque(true);
 
               javax.swing.GroupLayout contenedorLayout = new javax.swing.GroupLayout(contenedor);
               contenedor.setLayout(contenedorLayout);
               contenedorLayout.setHorizontalGroup(
                      contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                     .addComponent(lblEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 1264, Short.MAX_VALUE)
                      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorLayout.createSequentialGroup()
                             .addGap(17, 17, 17)
-                            .addGroup(contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                   .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                   .addComponent(contenedorCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGap(17, 17, 17))
+                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenedorLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(contenedorGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addContainerGap())
+                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
               );
               contenedorLayout.setVerticalGroup(
                      contenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(contenedorLayout.createSequentialGroup()
-                            .addComponent(lblEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(contenedorCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(contenedorGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(33, 33, 33))
+                            .addGap(21, 21, 21))
               );
 
               javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -294,70 +348,6 @@ public class FramePrincipal extends javax.swing.JFrame {
               pack();
        }// </editor-fold>//GEN-END:initComponents
 
-       private void btnCargaArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaArchivoActionPerformed
-              boolean estadoOriginal = this.escuchadorActivado;
-              if (estadoOriginal) {
-                     toggleEscuchador(false);
-              }
-              JFileChooser chooserArchivo = new JFileChooser();
-              chooserArchivo.setDialogTitle("Archivo de entrada");
-              FileNameExtensionFilter filtro = new FileNameExtensionFilter("archivo de texto", "txt");
-              chooserArchivo.setFileFilter(filtro);
-              chooserArchivo.setAcceptAllFileFilterUsed(false);
-
-              int seleccionado = chooserArchivo.showOpenDialog(this);
-
-              if (seleccionado == JFileChooser.APPROVE_OPTION) {
-                     File archivoDeEntrada = chooserArchivo.getSelectedFile();
-                     motor.realizarAccionesAccionesTexto(archivoDeEntrada, txtPaneEntrada);
-                     
-              }
-
-              if (estadoOriginal) {
-                     toggleEscuchador(true);
-              }
-       }//GEN-LAST:event_btnCargaArchivoActionPerformed
-
-       private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
-              File archivo = obtenerFile(Extension.TXT.getExtension(), fileEntrada);
-              if (archivo == null) {
-                     return;
-              }
-              fileEntrada=archivo;
-              motor.getCargador().pedirLecturaArchivo(archivo, txtPaneEntrada);
-              
-              actualizarNumeroDeLinea(lineaDeNumerosEntrada, txtPaneEntrada);
-           
-       }//GEN-LAST:event_txtBusquedaActionPerformed
-
-
-       private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-              if(txtBusqueda.getText().equals("")){
-                     JOptionPane.showMessageDialog(this,"Debes ingresar una palabra para buscar");
-                     return;
-              }
-              motor.buscarPalabra(txtPaneSalida, txtBusqueda.getText());
-              
-       }//GEN-LAST:event_btnBuscarActionPerformed
-
-       private void btnCargaDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaDatosActionPerformed
-              File file = obtenerFile(Extension.JSON.getExtension(), fileConfig);
-              if (file == null) {
-                     return;
-              }
-              archivoJson = file;
-              motor.leerYCargarJson(archivoJson);
-              motor.realizarAccionesEdicionTexto(txtPaneEntrada);
-              btnEditarConfig.setEnabled(true);
-       }//GEN-LAST:event_btnCargaDatosActionPerformed
-
-       private void btnEditarConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarConfigActionPerformed
-              EditorJsonDialog editor = new EditorJsonDialog(archivoJson, motor, this);
-              editor.setVisible(true);
-              motor.realizarAccionesEdicionTexto(txtPaneEntrada);
-              
-              
-       }//GEN-LAST:event_btnEditarConfigActionPerformed
 
        private void btnReporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteErroresActionPerformed
               ReporteErroresDialog dialog = new ReporteErroresDialog(motor.getAlmacenTokens().getListaTokens());
@@ -416,9 +406,72 @@ public class FramePrincipal extends javax.swing.JFrame {
               }
        }//GEN-LAST:event_btnExportarReportesActionPerformed
 
-       private void btnRecuperacionErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecuperacionErroresActionPerformed
-              // TODO add your handling code here:
-       }//GEN-LAST:event_btnRecuperacionErroresActionPerformed
+       private void btnEditarConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarConfigActionPerformed
+              EditorJsonDialog editor = new EditorJsonDialog(archivoJson, motor, this);
+              editor.setVisible(true);
+              motor.realizarAccionesEdicionTexto(txtPaneEntrada);
+
+       }//GEN-LAST:event_btnEditarConfigActionPerformed
+
+       private void btnCargaDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaDatosActionPerformed
+              File file = obtenerFile(Extension.JSON.getExtension(), fileConfig);
+              if (file == null) {
+                     return;
+              }
+              archivoJson = file;
+              motor.leerYCargarJson(archivoJson);
+              motor.realizarAccionesEdicionTexto(txtPaneEntrada);
+              btnEditarConfig.setEnabled(true);
+       }//GEN-LAST:event_btnCargaDatosActionPerformed
+
+       private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+              if(txtBusqueda.getText().equals("")){
+                     JOptionPane.showMessageDialog(this,"Debes ingresar una palabra para buscar");
+                     return;
+              }  
+              motor.getBuscador().buscarPatrones(txtPaneEntrada.getText(),txtBusqueda.getText(), txtPaneSalida);
+              actualizarNumeroDeLinea(txtPaneLineaBusqueda,txtPaneSalida);
+       }//GEN-LAST:event_btnBuscarActionPerformed
+
+       private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
+              File archivo = obtenerFile(Extension.TXT.getExtension(), fileEntrada);
+              if (archivo == null) {
+                     return;
+              }
+              fileEntrada=archivo;
+              motor.getCargador().pedirLecturaArchivo(archivo, txtPaneEntrada);
+
+       }//GEN-LAST:event_txtBusquedaActionPerformed
+
+       private void btnCargaArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaArchivoActionPerformed
+              boolean estadoOriginal = this.escuchadorActivado;
+              if (estadoOriginal) {
+                     toggleEscuchador(false);
+              }
+              JFileChooser chooserArchivo = new JFileChooser();
+              chooserArchivo.setDialogTitle("Archivo de entrada");
+              FileNameExtensionFilter filtro = new FileNameExtensionFilter("archivo de texto", "txt");
+              chooserArchivo.setFileFilter(filtro);
+              chooserArchivo.setAcceptAllFileFilterUsed(false);
+
+              int seleccionado = chooserArchivo.showOpenDialog(this);
+
+              if (seleccionado == JFileChooser.APPROVE_OPTION) {
+                     File archivoDeEntrada = chooserArchivo.getSelectedFile();
+                     motor.realizarAccionesAccionesTexto(archivoDeEntrada, txtPaneEntrada);
+                     actualizarNumeroDeLinea(txtNumeracionEntrada, txtPaneEntrada);
+
+              }
+
+              if (estadoOriginal) {
+                     toggleEscuchador(true);
+              }
+       }//GEN-LAST:event_btnCargaArchivoActionPerformed
+
+       private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+             txtPaneEntrada.setText("");
+            
+       }//GEN-LAST:event_btnLimpiarActionPerformed
        
        private File obtenerFile(String extension, File file) {
               JFileChooser chooserArchivo = new JFileChooser();
@@ -435,41 +488,16 @@ public class FramePrincipal extends javax.swing.JFrame {
               return file;
        }
 
-       public void inicializarNumeroDeLineas(JScrollPane scrollpane, JTextPane txtPane, JTextArea lineaDeNumeros) {
-              lineaDeNumeros.setEditable(false);
-              lineaDeNumeros.setBackground(Color.MAGENTA);
-              lineaDeNumeros.setFont(new Font("Monospaced", Font.PLAIN, 17));
-              scrollpane.setRowHeaderView(lineaDeNumeros);
-
-              // Escucha cambios en el documento
-              txtPane.getDocument().addDocumentListener(new DocumentListener() {
-                     @Override
-                     public void insertUpdate(DocumentEvent e) {
-                            actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
-                            
-                     }
-                     @Override
-                     public void removeUpdate(DocumentEvent e) {
-                            actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
-                     }
-                     @Override
-                     public void changedUpdate(DocumentEvent e) {
-                     }
-              });
-              actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
-       }
-
-
-
-
-       //metodo que se encarga de 
+       //metodo que se encarga de escuchar y ejecutar el metodo indicado cada ves que se ingresa algo em el jtextPane
        public void inicializarEscuchadorTextoEntrada() {
               if (escuchadorActivado) {
                      listener = new DocumentListener() {
                             public void insertUpdate(DocumentEvent e) {
+                                   actualizarNumeroDeLinea(txtNumeracionEntrada,txtPaneEntrada);
                                    motor.realizarAccionesEdicionTexto(txtPaneEntrada);
                             }
                             public void removeUpdate(DocumentEvent e) {
+                                    actualizarNumeroDeLinea(txtNumeracionEntrada, txtPaneEntrada);
                                    motor.realizarAccionesEdicionTexto(txtPaneEntrada);
                             }
                             public void changedUpdate(DocumentEvent e) {
@@ -499,21 +527,35 @@ public class FramePrincipal extends javax.swing.JFrame {
         * @param lineaDeNumeros
         * @param txtPane 
         */
-       private void actualizarNumeroDeLinea(JTextArea lineaDeNumeros, JTextPane txtPane) {
+       private void actualizarNumeroDeLinea(JTextPane lineaDeNumeros, JTextPane txtPane) {
+              String[] lineas = txtPane.getText().split("\n");
+              int totalLineas = lineas.length;
               try {
-                     int totalLineas = txtPane.getDocument().getDefaultRootElement().getElementCount();
-                     String numeros = "";
+                     String impresion = "";
                      for (int i = 1; i <= totalLineas; i++) {
-                            numeros += i + "\n";
+                            impresion += "" + (i) + "\n";
                      }
-                     lineaDeNumeros.setText(numeros);
+
+                     lineaDeNumeros.setText(impresion);
               } catch (Exception e) {
                      lineaDeNumeros.setText("1");
               }
        }
 
-       public static JTextPane getTxtPaneEntrada() {
-              return txtPaneEntrada;
+       private void ocultarScrolls() {
+              int horizontal = javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+              int vertical = javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
+
+              scrollEntrada.setHorizontalScrollBarPolicy(horizontal);
+              scrollEntrada.setVerticalScrollBarPolicy(vertical);
+              scrollLineasEntrada.setHorizontalScrollBarPolicy(horizontal);
+              scrollLineasEntrada.setVerticalScrollBarPolicy(vertical);
+
+              scrollLineaSalida.setHorizontalScrollBarPolicy(horizontal);
+              scrollLineaSalida.setVerticalScrollBarPolicy(vertical);
+              scrollSalida.setHorizontalScrollBarPolicy(horizontal);
+              scrollSalida.setVerticalScrollBarPolicy(vertical);
+
        }
 
        public JTextPane getTxtPaneSalida() {
@@ -527,8 +569,18 @@ public class FramePrincipal extends javax.swing.JFrame {
        public void setArchivoJson(File file){
               archivoJson=file;
        }
-       
-       
+
+       public void sincronizarScrollBar() {
+              scrollEntrada.getVerticalScrollBar().addAdjustmentListener(e -> {
+                     scrollLineasEntrada.getVerticalScrollBar().setValue(e.getValue());
+              });
+              
+              scrollSalida.getVerticalScrollBar().addAdjustmentListener(e -> {
+                     scrollLineaSalida.getVerticalScrollBar().setValue(e.getValue());
+              });
+       }
+
+
        
        // Variables declaration - do not modify//GEN-BEGIN:variables
        private javax.swing.JButton btnBuscar;
@@ -537,18 +589,24 @@ public class FramePrincipal extends javax.swing.JFrame {
        private javax.swing.JButton btnEditarConfig;
        private javax.swing.JButton btnExportarReportes;
        private javax.swing.JButton btnExportarTxt;
-       private javax.swing.JButton btnRecuperacionErrores;
+       private javax.swing.JButton btnLimpiar;
        private javax.swing.JButton btnReporteErrores;
        private javax.swing.JButton btnReporteGeneral;
        private javax.swing.JButton btnReporteTokens;
        private javax.swing.JPanel contenedor;
-       private javax.swing.JPanel contenedorCarga;
-       private javax.swing.JLabel lblEncabezado;
+       private javax.swing.JPanel contenedorBusqueda;
+       private javax.swing.JPanel contenedorEntrada;
+       private javax.swing.JPanel contenedorGeneral;
+       private javax.swing.JLabel jLabel1;
        private javax.swing.JPanel panelReportes;
-       private javax.swing.JScrollPane scrollPaneAreaEntrada;
-       private javax.swing.JScrollPane scrollPaneSalida;
+       private javax.swing.JScrollPane scrollEntrada;
+       private javax.swing.JScrollPane scrollLineaSalida;
+       private javax.swing.JScrollPane scrollLineasEntrada;
+       private javax.swing.JScrollPane scrollSalida;
        private javax.swing.JTextField txtBusqueda;
-       private static javax.swing.JTextPane txtPaneEntrada;
+       private javax.swing.JTextPane txtNumeracionEntrada;
+       private javax.swing.JTextPane txtPaneEntrada;
+       private javax.swing.JTextPane txtPaneLineaBusqueda;
        private javax.swing.JTextPane txtPaneSalida;
        // End of variables declaration//GEN-END:variables
 }
