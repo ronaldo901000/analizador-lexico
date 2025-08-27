@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
@@ -36,9 +37,14 @@ public class LectorDeTexto {
               }
        }
 
-       public void leerConfiguracion(File file, JTextPane txtPane) {
+       /**
+        * 
+        * @param file
+        * @return
+        */
+       public String leerConfiguracion(File file) {
               if (file == null) {
-                     return;
+                     return null;
               }
               String contenido = "";
               try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -46,10 +52,11 @@ public class LectorDeTexto {
                      while ((linea = reader.readLine()) != null) {
                            contenido+=linea+"\n"; 
                      }
-                     txtPane.setText(contenido);
+                     return contenido;
               } catch (IOException e) {
                      e.printStackTrace();
               }
+              return null;
        }
 
 }

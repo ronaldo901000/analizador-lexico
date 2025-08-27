@@ -48,6 +48,7 @@ public class EditorJsonDialog extends javax.swing.JDialog {
               jPanel2 = new javax.swing.JPanel();
               btnAgregar = new javax.swing.JButton();
               btnEliminar = new javax.swing.JButton();
+              btnVer = new javax.swing.JButton();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
               setModal(true);
@@ -101,6 +102,13 @@ public class EditorJsonDialog extends javax.swing.JDialog {
                      }
               });
 
+              btnVer.setText("Ver");
+              btnVer.addActionListener(new java.awt.event.ActionListener() {
+                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            btnVerActionPerformed(evt);
+                     }
+              });
+
               javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
               jPanel2.setLayout(jPanel2Layout);
               jPanel2Layout.setHorizontalGroup(
@@ -110,16 +118,23 @@ public class EditorJsonDialog extends javax.swing.JDialog {
                             .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(29, 29, 29)
                             .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(13, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnVer, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                            .addContainerGap())
               );
               jPanel2Layout.setVerticalGroup(
                      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(jPanel2Layout.createSequentialGroup()
                             .addContainerGap()
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                   .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                                   .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                   .addGroup(jPanel2Layout.createSequentialGroup()
+                                          .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                 .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                          .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                   .addGroup(jPanel2Layout.createSequentialGroup()
+                                          .addComponent(btnVer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                          .addContainerGap())))
               );
 
               javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -136,11 +151,10 @@ public class EditorJsonDialog extends javax.swing.JDialog {
                                           .addComponent(cmbTipos, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                                           .addGap(30, 30, 30)
                                           .addComponent(btnSelecciona))
-                                   .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                          .addContainerGap()
-                                          .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                          .addGap(28, 28, 28)))
-                            .addContainerGap(70, Short.MAX_VALUE))
+                                   .addGroup(jPanel1Layout.createSequentialGroup()
+                                          .addGap(22, 22, 22)
+                                          .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addContainerGap(27, Short.MAX_VALUE))
               );
               jPanel1Layout.setVerticalGroup(
                      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,7 +210,7 @@ public class EditorJsonDialog extends javax.swing.JDialog {
        }// </editor-fold>//GEN-END:initComponents
 
        private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-              escritor.reescribirArchivo(motor.getVerificador().getArchivador().darDefinicionesJson(), file);
+              
               this.dispose();
        }//GEN-LAST:event_btnSalirActionPerformed
 
@@ -206,6 +220,7 @@ public class EditorJsonDialog extends javax.swing.JDialog {
                      return;
               }
               motor.getVerificador().getArchivador().agregarElementoDefinicion(indiceSeleccionado, texto);
+              escritor.reescribirArchivo(motor.getVerificador().getArchivador().darDefinicionesJson(), file);
               habilitado=false;
               alertanBotones();
        }//GEN-LAST:event_btnAgregarActionPerformed
@@ -222,9 +237,17 @@ public class EditorJsonDialog extends javax.swing.JDialog {
               
               EliminarDialog eliminar = new EliminarDialog(definicion);
               eliminar.setVisible(true);
+              escritor.reescribirArchivo(motor.getVerificador().getArchivador().darDefinicionesJson(), file);
               habilitado = false;
               alertanBotones();
        }//GEN-LAST:event_btnEliminarActionPerformed
+
+       private void btnVerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerActionPerformed
+            String contenido=motor.getCargador().getLector().leerConfiguracion(file);
+            VerJsonDialog ver = new VerJsonDialog(contenido);
+            ver.setVisible(true);
+            
+       }//GEN-LAST:event_btnVerActionPerformed
 
        private void alertanBotones() {
                      btnEliminar.setEnabled(habilitado);
@@ -249,6 +272,7 @@ public class EditorJsonDialog extends javax.swing.JDialog {
        private javax.swing.JButton btnEliminar;
        private javax.swing.JButton btnSalir;
        private javax.swing.JButton btnSelecciona;
+       private javax.swing.JButton btnVer;
        private javax.swing.JComboBox<String> cmbTipos;
        private javax.swing.JPanel contenedor;
        private javax.swing.JLabel jLabel1;
