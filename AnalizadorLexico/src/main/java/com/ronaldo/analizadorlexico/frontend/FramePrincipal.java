@@ -76,7 +76,6 @@ public class FramePrincipal extends javax.swing.JFrame {
               btnReporteGeneral = new javax.swing.JButton();
               btnExportarTxt = new javax.swing.JButton();
               btnExportarReportes = new javax.swing.JButton();
-              btnRecuperacionErrores = new javax.swing.JButton();
 
               setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -99,7 +98,7 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
-              txtPaneEntrada.setFont(new java.awt.Font("Monospaced", 0, 17)); // NOI18N
+              txtPaneEntrada.setFont(new java.awt.Font("Monospaced", 0, 21)); // NOI18N
               scrollPaneAreaEntrada.setViewportView(txtPaneEntrada);
 
               txtBusqueda.addActionListener(new java.awt.event.ActionListener() {
@@ -217,19 +216,12 @@ public class FramePrincipal extends javax.swing.JFrame {
                      }
               });
 
-              btnRecuperacionErrores.setText("Recuperar De Errores");
-              btnRecuperacionErrores.addActionListener(new java.awt.event.ActionListener() {
-                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                            btnRecuperacionErroresActionPerformed(evt);
-                     }
-              });
-
               javax.swing.GroupLayout panelReportesLayout = new javax.swing.GroupLayout(panelReportes);
               panelReportes.setLayout(panelReportesLayout);
               panelReportesLayout.setHorizontalGroup(
                      panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(panelReportesLayout.createSequentialGroup()
-                            .addContainerGap(71, Short.MAX_VALUE)
+                            .addContainerGap(186, Short.MAX_VALUE)
                             .addComponent(btnReporteErrores)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -239,8 +231,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                             .addComponent(btnExportarTxt)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btnExportarReportes)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnRecuperacionErrores)
                             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               );
               panelReportesLayout.setVerticalGroup(
@@ -252,8 +242,7 @@ public class FramePrincipal extends javax.swing.JFrame {
                                    .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnReporteGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnExportarTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                   .addComponent(btnExportarReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                   .addComponent(btnRecuperacionErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                   .addComponent(btnExportarReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addContainerGap(17, Short.MAX_VALUE))
               );
 
@@ -415,10 +404,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                      JOptionPane.showMessageDialog(null, " exportacion exitosa");
               }
        }//GEN-LAST:event_btnExportarReportesActionPerformed
-
-       private void btnRecuperacionErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecuperacionErroresActionPerformed
-              // TODO add your handling code here:
-       }//GEN-LAST:event_btnRecuperacionErroresActionPerformed
        
        private File obtenerFile(String extension, File file) {
               JFileChooser chooserArchivo = new JFileChooser();
@@ -437,8 +422,8 @@ public class FramePrincipal extends javax.swing.JFrame {
 
        public void inicializarNumeroDeLineas(JScrollPane scrollpane, JTextPane txtPane, JTextArea lineaDeNumeros) {
               lineaDeNumeros.setEditable(false);
-              lineaDeNumeros.setBackground(Color.MAGENTA);
-              lineaDeNumeros.setFont(new Font("Monospaced", Font.PLAIN, 17));
+              lineaDeNumeros.setBackground(Color.ORANGE);
+              lineaDeNumeros.setFont(new Font("Monospaced", Font.PLAIN, 21));
               scrollpane.setRowHeaderView(lineaDeNumeros);
 
               // Escucha cambios en el documento
@@ -446,7 +431,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                      @Override
                      public void insertUpdate(DocumentEvent e) {
                             actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
-                            
                      }
                      @Override
                      public void removeUpdate(DocumentEvent e) {
@@ -456,7 +440,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                      public void changedUpdate(DocumentEvent e) {
                      }
               });
-              actualizarNumeroDeLinea(lineaDeNumeros, txtPane);
        }
 
 
@@ -537,7 +520,6 @@ public class FramePrincipal extends javax.swing.JFrame {
        private javax.swing.JButton btnEditarConfig;
        private javax.swing.JButton btnExportarReportes;
        private javax.swing.JButton btnExportarTxt;
-       private javax.swing.JButton btnRecuperacionErrores;
        private javax.swing.JButton btnReporteErrores;
        private javax.swing.JButton btnReporteGeneral;
        private javax.swing.JButton btnReporteTokens;

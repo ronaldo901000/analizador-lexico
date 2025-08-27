@@ -1,4 +1,4 @@
-package com.ronaldo.analizadorlexico.backend.carga;
+package com.ronaldo.analizadorlexico.backend.analisis;
 
 import com.ronaldo.analizadorlexico.backend.Motor;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
@@ -111,7 +111,7 @@ public class ProcesadorPalabras {
                                           posicionActual = texto.length();
                                           columnaEnLinea += cadenaIncompleta.length();
                                    }
-                                   //analiza los demas lexemas
+                                   //se analizan los demas lexemas
                             } else {
                                    int inicioLexema = posicionActual;
                                    while (posicionActual < texto.length()) {

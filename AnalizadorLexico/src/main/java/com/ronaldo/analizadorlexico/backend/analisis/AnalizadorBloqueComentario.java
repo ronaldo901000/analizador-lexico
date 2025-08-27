@@ -1,4 +1,4 @@
-package com.ronaldo.analizadorlexico.backend.carga;
+package com.ronaldo.analizadorlexico.backend.analisis;
 
 import com.ronaldo.analizadorlexico.backend.Motor;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;

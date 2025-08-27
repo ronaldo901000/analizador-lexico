@@ -4,7 +4,7 @@ import com.ronaldo.analizadorlexico.backend.almacen.AlmacenResumenLexemas;
 import com.ronaldo.analizadorlexico.backend.almacen.AlmacenTokens;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.Verificador;
-import com.ronaldo.analizadorlexico.backend.carga.ProcesadorPalabras;
+import com.ronaldo.analizadorlexico.backend.analisis.ProcesadorPalabras;
 import com.ronaldo.analizadorlexico.backend.comparacion.Comparador;
 import com.ronaldo.analizadorlexico.backend.lectura.CargadorDeTexto;
 import com.ronaldo.analizadorlexico.backend.complementos.Impresor;
