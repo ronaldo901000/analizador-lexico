@@ -56,6 +56,12 @@ public class AnalizadorBloqueComentario {
               return -1;
        }
 
+       /**
+        * 
+        * @param texto
+        * @param posicionInicio
+        * @return 
+        */
        public int buscarSimboloCierre(String texto, int posicionInicio) {
               DefinicionToken definicion = motor.getVerificador().getArchivador()
                       .obtenerDefinicionEspecifica(TipoToken.BLOQUE_FIN.getNombre());

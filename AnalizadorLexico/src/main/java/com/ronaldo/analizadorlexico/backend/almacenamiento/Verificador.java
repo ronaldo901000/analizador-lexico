@@ -1,6 +1,7 @@
 package com.ronaldo.analizadorlexico.backend.almacenamiento;
 
 import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
+import com.ronaldo.analizadorlexico.backend.exception.JsonException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -61,28 +62,33 @@ public class Verificador {
         * @param texto
         */
        private void obtenerTipo(String texto) {
-              int inicio = texto.indexOf("\"");
-              int fin = texto.indexOf("\"", inicio + 1);
+              try {
+                     int inicio = texto.indexOf("\"");
+                     int fin = texto.indexOf("\"", inicio + 1);
 
-              if (inicio != -1 && fin != -1) {
-                     String token = texto.substring(inicio + 1, fin);
-                     int llaveInicio = texto.indexOf("[") + 1;
-                     int llavefin = texto.length() - 2;
-                     if (llaveInicio == -1 || llavefin == -1) {
-                            return;
-                     }
-                     if (!token.equals(TipoToken.COMENTARIO_LINEA.getNombre())
-                             && !token.equals(TipoToken.BLOQUE_INICIO.getNombre()) && 
-                             !token.endsWith(TipoToken.BLOQUE_FIN.getNombre())) {
-                            String elementos = texto.substring(llaveInicio, llavefin);
-                            organizarTipo(token, elementos);
+                     if (inicio != -1 && fin != -1) {
+                            String token = texto.substring(inicio + 1, fin);
+                            int llaveInicio = texto.indexOf("[") + 1;
+                            int llavefin = texto.length() - 2;
+                            if (llaveInicio == -1 || llavefin == -1) {
+                                   return;
+                            }
+                            if (!token.equals(TipoToken.COMENTARIO_LINEA.getNombre())
+                                    && !token.equals(TipoToken.BLOQUE_INICIO.getNombre())
+                                    && !token.endsWith(TipoToken.BLOQUE_FIN.getNombre())) {
+                                   String elementos = texto.substring(llaveInicio, llavefin);
+                                   organizarTipo(token, elementos);
+                            } else {
+                                   organizarTipo(token, texto);
+                            }
+
                      } else {
-                            organizarTipo(token, texto);
+
                      }
-
-              } else {
-
+              } catch (Exception e) {
+                     System.out.println("error");
               }
+
        }
 
        /**

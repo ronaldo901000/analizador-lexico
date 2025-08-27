@@ -1,6 +1,6 @@
 package com.ronaldo.analizadorlexico.backend.comparacion;
 
-import com.ronaldo.analizadorlexico.backend.DefinicionException;
+import com.ronaldo.analizadorlexico.backend.exception.DefinicionException;
 import java.util.List;
 
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
@@ -81,21 +81,20 @@ public class Sintaxis {
 
               for (int i = 0; i < elemento.length(); i++) {
                      char c = elemento.charAt(i);
+
                      if (c == '.') {
                             if (tienePunto) {
-                                   return false;
+                                   return false; 
                             }
                             tienePunto = true;
-                            continue;
-                     }
-
-                     if (!esDigito(c)) {
-                            return false; 
-                     }
-                     if (tienePunto) {
-                            digitosDespuesPunto++;
+                     } else if (!esDigito(c)) {
+                            return false;
                      } else {
-                            digitosAntesPunto++;
+                            if (tienePunto) {
+                                   digitosDespuesPunto++;
+                            } else {
+                                   digitosAntesPunto++;
+                            }
                      }
               }
               return tienePunto && digitosDespuesPunto >= 1;
@@ -133,8 +132,13 @@ public class Sintaxis {
               if (elemento.length() == 0) {
                      return false;
               }
-              char c = elemento.charAt(0);
-              return existeEnAlfabeto(c);
+              for (int i = 0; i <elemento.length(); i++) {
+                     char c = elemento.charAt(i);
+                     if(!existeEnAlfabeto(c)){
+                            return false;
+                     }
+              }
+              return true;
        }
        
        public boolean esOperador(String elemento){
@@ -178,7 +182,6 @@ public class Sintaxis {
                             return true;
                      }
               }
-
               for (char letra = 'A'; letra <= 'Z'; letra++) {
                      if (c == letra) {
                             return true;

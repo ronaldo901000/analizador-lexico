@@ -163,7 +163,7 @@ public class Motor {
        }
 
        public void guardarCambiosTxt(File file, String texto){
-              escritor.reescribirArchivo(texto, file);
+              escritor.reescribirArchivoEntrada(texto, file);
        }
 
        public CargadorDeTexto getCargador() {
