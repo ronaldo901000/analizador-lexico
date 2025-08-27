@@ -1,6 +1,5 @@
 package com.ronaldo.analizadorlexico.backend.complementos;
 
-import com.ronaldo.analizadorlexico.backend.lectura.PalabraSimple;
 import com.ronaldo.analizadorlexico.backend.token.Token;
 import java.awt.Color;
 import java.util.List;
@@ -56,29 +55,6 @@ public class Impresor {
                      ex.printStackTrace();
               }
        }
-
-       public void imprimirColoresTexto(JTextPane textPane, List<Token> tokens) {
-              StyledDocument doc = textPane.getStyledDocument();
-
-              try {
-                     // Limpiar contenido antes de reescribir
-                     doc.remove(0, doc.getLength());
-
-                     for (Token token : tokens) {
-                            Style style = textPane.addStyle("TokenStyle", null);
-                            StyleConstants.setForeground(style, token.getColor());
-
-                            doc.insertString(doc.getLength(), token.getLexema(), style);
-
-                            if (token.isEsFinal()) {
-                                   doc.insertString(doc.getLength(), "\n", style);
-                            }
-                     }
-              } catch (BadLocationException e) {
-                     e.printStackTrace();
-              }
-       }
-
        /**
         * 
         * @param textPane
@@ -91,9 +67,14 @@ public class Impresor {
               }
        }
 
+       /**
+        * metodo que se encarga de imprimir cada token con su color correspondiente
+        * @param textPane
+        * @param token 
+        */
        public void colorearToken(JTextPane textPane, Token token) {
               SwingUtilities.invokeLater(() -> {
-                     StyledDocument doc = textPane.getStyledDocument();
+                     StyledDocument document = textPane.getStyledDocument();
                      int inicio = token.getPosicionCaracter(); 
                      int longitud = token.getLexema().length();
 
@@ -101,7 +82,7 @@ public class Impresor {
                      StyleConstants.setForeground(style, token.getColor());
 
                      try {
-                            doc.setCharacterAttributes(inicio, longitud, style, false);
+                            document.setCharacterAttributes(inicio, longitud, style, false);
                      } catch (Exception ex) {
                             ex.printStackTrace();
                      }

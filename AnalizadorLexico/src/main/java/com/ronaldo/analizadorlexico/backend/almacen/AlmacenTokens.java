@@ -51,9 +51,6 @@ public class AlmacenTokens {
               try {
                      int total = listaTokens.size();
                      int validos = obtenerCantidadValidos();
-                     System.out.println("total tokens: " + total);
-                     System.out.println("validos: " + validos);
-
                      return ((double) validos / total) * CIEN;
 
               } catch (Exception e) {

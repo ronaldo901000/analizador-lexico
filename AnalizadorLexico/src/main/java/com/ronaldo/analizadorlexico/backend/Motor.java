@@ -146,17 +146,24 @@ public class Motor {
         * @param file 
         */
        public void pedirExportacion(File file) {
-              List<Token> tokensErroneos = almacenTokens.darTokensErroneos();
+              List <Token> tokensErroneos= new ArrayList<>();
+              for (int i = 0; i < almacenTokens.getListaTokens().size(); i++) {
+                     if (almacenTokens.getListaTokens().get(i).getTipo().equals(TipoToken.ERROR.getNombre())) {
+                            tokensErroneos.add(almacenTokens.getListaTokens().get(i));
+                     }
+
+              }
               if (tokensErroneos.size() > 0) {
-                     escritor.escribirReporteExportacion(null, file, tokensErroneos);
+                     escritor.escribirReporteExportacion(null, file, tokensErroneos, null);
               } else {
-                     escritor.escribirReporteExportacion(almacenTokens.getListaTokens(), file, null);
+                     escritor.escribirReporteExportacion
+        (almacenTokens.getListaTokens(), file, null,contador.recontarLexemas(almacenTokens.getListaTokens()));
               }
 
        }
 
        public void guardarCambiosTxt(File file, String texto){
-              escritor.reescribirArchivo(texto, file);
+              escritor.reescribirArchivoEntrada(texto, file);
        }
 
        public CargadorDeTexto getCargador() {

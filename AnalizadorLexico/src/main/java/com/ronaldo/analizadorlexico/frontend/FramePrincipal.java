@@ -1,14 +1,15 @@
 package com.ronaldo.analizadorlexico.frontend;
 
-import com.ronaldo.analizadorlexico.frontend.dialogs.EditorJson;
 import com.ronaldo.analizadorlexico.backend.Motor;
 import com.ronaldo.analizadorlexico.backend.enums.Extension;
+import com.ronaldo.analizadorlexico.frontend.dialogs.EditorJsonDialog;
 import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteErroresDialog;
 import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteTokensDialog;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -46,6 +47,8 @@ public class FramePrincipal extends javax.swing.JFrame {
               inicializarEscuchadorTextoEntrada();
               toggleEscuchador(escuchadorActivado);
               btnEditarConfig.setEnabled(false);
+              setTitle("Analizador Lexico");
+              setExtendedState(JFrame.MAXIMIZED_BOTH);
        }
 
        /**
@@ -166,13 +169,13 @@ public class FramePrincipal extends javax.swing.JFrame {
                                    .addComponent(btnEditarConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnCargaArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                            .addComponent(scrollPaneAreaEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(contenedorCargaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                    .addComponent(txtBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                            .addComponent(scrollPaneSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                             .addGap(14, 14, 14))
               );
 
@@ -226,7 +229,7 @@ public class FramePrincipal extends javax.swing.JFrame {
               panelReportesLayout.setHorizontalGroup(
                      panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(panelReportesLayout.createSequentialGroup()
-                            .addGap(15, 15, 15)
+                            .addContainerGap(71, Short.MAX_VALUE)
                             .addComponent(btnReporteErrores)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -243,7 +246,7 @@ public class FramePrincipal extends javax.swing.JFrame {
               panelReportesLayout.setVerticalGroup(
                      panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                      .addGroup(panelReportesLayout.createSequentialGroup()
-                            .addContainerGap(25, Short.MAX_VALUE)
+                            .addContainerGap(17, Short.MAX_VALUE)
                             .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                    .addComponent(btnReporteErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnReporteTokens, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -251,7 +254,7 @@ public class FramePrincipal extends javax.swing.JFrame {
                                    .addComponent(btnExportarTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnExportarReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                    .addComponent(btnRecuperacionErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(26, Short.MAX_VALUE))
+                            .addContainerGap(17, Short.MAX_VALUE))
               );
 
               javax.swing.GroupLayout contenedorLayout = new javax.swing.GroupLayout(contenedor);
@@ -274,7 +277,7 @@ public class FramePrincipal extends javax.swing.JFrame {
                             .addComponent(contenedorCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(16, 16, 16))
+                            .addGap(33, 33, 33))
               );
 
               javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -293,7 +296,6 @@ public class FramePrincipal extends javax.swing.JFrame {
 
        private void btnCargaArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaArchivoActionPerformed
               boolean estadoOriginal = this.escuchadorActivado;
-
               if (estadoOriginal) {
                      toggleEscuchador(false);
               }
@@ -330,6 +332,10 @@ public class FramePrincipal extends javax.swing.JFrame {
 
 
        private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+              if(txtBusqueda.getText().equals("")){
+                     JOptionPane.showMessageDialog(this,"Debes ingresar una palabra para buscar");
+                     return;
+              }
               motor.buscarPalabra(txtPaneSalida, txtBusqueda.getText());
               
        }//GEN-LAST:event_btnBuscarActionPerformed
@@ -341,12 +347,16 @@ public class FramePrincipal extends javax.swing.JFrame {
               }
               archivoJson = file;
               motor.leerYCargarJson(archivoJson);
+              motor.realizarAccionesEdicionTexto(txtPaneEntrada);
               btnEditarConfig.setEnabled(true);
        }//GEN-LAST:event_btnCargaDatosActionPerformed
 
        private void btnEditarConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarConfigActionPerformed
-              EditorJson dialog = new EditorJson(archivoJson, motor, this);
-              dialog.setVisible(true);
+              EditorJsonDialog editor = new EditorJsonDialog(archivoJson, motor, this);
+              editor.setVisible(true);
+              motor.realizarAccionesEdicionTexto(txtPaneEntrada);
+              
+              
        }//GEN-LAST:event_btnEditarConfigActionPerformed
 
        private void btnReporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteErroresActionPerformed
@@ -357,8 +367,8 @@ public class FramePrincipal extends javax.swing.JFrame {
        private void btnReporteTokensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteTokensActionPerformed
               if(motor.getAlmacenTokens().todosLosTokensSonCorrectos()){
                      ReporteTokensDialog dialog = new ReporteTokensDialog
-                     (motor.getAlmacenTokens().getListaTokens(), motor.getContador().recontarLexemas
-                     (motor.getAlmacenTokens().getListaTokens()));
+                     (motor.getAlmacenTokens().getListaTokens(), 
+                      motor.getContador().recontarLexemas(motor.getAlmacenTokens().getListaTokens()));
                      dialog.setVisible(true);
               }
               else{
@@ -374,7 +384,7 @@ public class FramePrincipal extends javax.swing.JFrame {
               File archivo = obtenerArchivoParaGuardar("Guardar texto de entrada", Extension.TXT.getExtension());
 
               if (archivo != null) {
-                     motor.guardarCambiosTxt(archivo, txtPaneEntrada.getText());
+                     motor.guardarCambiosTxt(fileEntrada,txtPaneEntrada.getText());
                      JOptionPane.showMessageDialog(null, "Archivo guardado exitosamente");
               }
        }//GEN-LAST:event_btnExportarTxtActionPerformed
@@ -452,6 +462,7 @@ public class FramePrincipal extends javax.swing.JFrame {
 
 
 
+       //metodo que se encarga de 
        public void inicializarEscuchadorTextoEntrada() {
               if (escuchadorActivado) {
                      listener = new DocumentListener() {
@@ -469,6 +480,10 @@ public class FramePrincipal extends javax.swing.JFrame {
               }
        }
 
+       /**
+        * 
+        * @param activar 
+        */
        public void toggleEscuchador(boolean activar) {
               if (activar && !escuchadorActivado) {
                      txtPaneEntrada.getDocument().addDocumentListener(listener);
@@ -479,6 +494,11 @@ public class FramePrincipal extends javax.swing.JFrame {
               }
        }
 
+       /**
+        * 
+        * @param lineaDeNumeros
+        * @param txtPane 
+        */
        private void actualizarNumeroDeLinea(JTextArea lineaDeNumeros, JTextPane txtPane) {
               try {
                      int totalLineas = txtPane.getDocument().getDefaultRootElement().getElementCount();
