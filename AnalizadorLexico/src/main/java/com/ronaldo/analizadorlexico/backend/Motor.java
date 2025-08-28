@@ -4,7 +4,7 @@ import com.ronaldo.analizadorlexico.backend.almacen.AlmacenResumenLexemas;
 import com.ronaldo.analizadorlexico.backend.almacen.AlmacenTokens;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.Verificador;
-import com.ronaldo.analizadorlexico.backend.analisis.ProcesadorPalabras;
+import com.ronaldo.analizadorlexico.backend.analisis.ProcesadorTexto;
 import com.ronaldo.analizadorlexico.backend.busqueda.BuscadorDePatrones;
 import com.ronaldo.analizadorlexico.backend.comparacion.Comparador;
 import com.ronaldo.analizadorlexico.backend.lectura.CargadorDeTexto;
@@ -31,7 +31,7 @@ public class Motor {
        private Verificador verificador;
        private Comparador comparador;
        private AlmacenResumenLexemas almacenResumenLexemas;
-       private ProcesadorPalabras procesador;
+       private ProcesadorTexto procesador;
        private boolean hayJson;
        private Escritor escritor;
        private ContadorLexemas contador;
@@ -39,7 +39,7 @@ public class Motor {
 
        public void iniciar() {
               contador= new ContadorLexemas();
-              procesador= new ProcesadorPalabras(this);
+              procesador= new ProcesadorTexto(this);
               almacenTokens = new AlmacenTokens();
               almacenResumenLexemas = new AlmacenResumenLexemas();
               impresor = new Impresor();

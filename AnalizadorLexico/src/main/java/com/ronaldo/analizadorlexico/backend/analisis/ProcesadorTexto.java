@@ -12,7 +12,7 @@ import javax.swing.JTextPane;
  *
  * @author ronaldo
  */
-public class ProcesadorPalabras {
+public class ProcesadorTexto {
 
        private static final char COMILLAS = '"';
        private static final char ESPACIO = ' ';
@@ -21,13 +21,10 @@ public class ProcesadorPalabras {
        private AnalizadorBloqueComentario analizadorBloque;
        private int numeroLinea;
        private int columnaEnLinea;
-       private CreadorDeTokens creador;
-       
 
-       public ProcesadorPalabras(Motor motor) {
+       public ProcesadorTexto(Motor motor) {
               this.motor = motor;
               analizadorBloque = new AnalizadorBloqueComentario(motor,this);
-              creador= new CreadorDeTokens(motor.getAlmacenTokens());
        }
 
        /**

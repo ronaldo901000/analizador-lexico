@@ -14,9 +14,9 @@ import javax.swing.JTextPane;
 public class AnalizadorBloqueComentario {
        private final char SALTO_LINEA='\n';
        private Motor motor;
-       private ProcesadorPalabras procesador;
+       private ProcesadorTexto procesador;
 
-       public AnalizadorBloqueComentario(Motor motor, ProcesadorPalabras procesador) {
+       public AnalizadorBloqueComentario(Motor motor, ProcesadorTexto procesador) {
               this.motor = motor;
               this.procesador = procesador;
        }
