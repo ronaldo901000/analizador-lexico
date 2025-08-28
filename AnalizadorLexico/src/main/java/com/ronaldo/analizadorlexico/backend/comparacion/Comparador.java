@@ -9,6 +9,7 @@ import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
 import com.ronaldo.analizadorlexico.backend.lectura.PalabraSimple;
 import java.awt.Color;
 import java.util.List;
+import javax.swing.JOptionPane;
 /**
  *
  * @author ronaldo
@@ -56,6 +57,7 @@ public class Comparador {
                             recuperador.analizarError(palabraSimple);
                      }
               } catch (DefinicionException e) {
+                     JOptionPane.showMessageDialog(null,e.getMessage());
               }
 
        }

@@ -2,7 +2,6 @@ package com.ronaldo.analizadorlexico.backend.escritura;
 
 import com.ronaldo.analizadorlexico.backend.ResumenLexema;
 import com.ronaldo.analizadorlexico.backend.almacenamiento.DefinicionToken;
-import com.ronaldo.analizadorlexico.backend.enums.TipoToken;
 import com.ronaldo.analizadorlexico.backend.token.Token;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,30 +12,17 @@ import java.util.List;
  * @author ronaldo
  */
 public class Escritor {
-       
-       private static final String SALTO_LINEA= "\n";
-       private static final char COMILLA='"';
-       private static final char DOS_PUNTOS=':';
-       private static final char CORCHETE_ABIERTO='{';
-       private static final char CORCHETE_CERRADO='}';
-       private static final char LLAVE_ABRIR='[';
-       private static final char LLAVE_CIERRE=']';
-       private static final char COMA=',';
-       private static final String TABULADO="  ";
-       
-       /*
-       {
- "palabrasReservadas": ["seguido", "config.json", "messi", "11" ,"123f", "variable","dfdd", ],
- "operadores": ["+", "-", "*", "/", "%", "="],
- "puntuacion": [".", ",", ";", ":","”",],
- "agrupacion": ["}", "(", ")", "{"],
- "comentarios": {
- "linea": ">>","--",
- "bloqueInicio": "/*","@"
- "bloqueFin": "","@"
- }
-}
-       */
+
+       private static final String SALTO_LINEA = "\n";
+       private static final char COMILLA = '"';
+       private static final char DOS_PUNTOS = ':';
+       private static final char CORCHETE_ABIERTO = '{';
+       private static final char CORCHETE_CERRADO = '}';
+       private static final char LLAVE_ABRIR = '[';
+       private static final char LLAVE_CIERRE = ']';
+       private static final char COMA = ',';
+       private static final String TABULADO = "  ";
+
        public File reescribirArchivoEntrada(String texto, File file) {
               try (FileWriter writer = new FileWriter(file)) {
                      writer.write(texto);
@@ -46,23 +32,29 @@ public class Escritor {
               return file;
        }
 
+       /**
+        * 
+        * @param definiciones
+        * @param file
+        * @return 
+        */
        public File reescribirArchivo(List<DefinicionToken> definiciones, File file) {
               try (FileWriter writer = new FileWriter(file)) {
                      writer.write(CORCHETE_ABIERTO);
                      writer.write(SALTO_LINEA);
 
-                     for(int i=0; i<4; i++){
-                            writer.write(TABULADO+COMILLA+definiciones.get(i).getNombre()+COMILLA+DOS_PUNTOS+" "+LLAVE_ABRIR);
+                     for (int i = 0; i < 4; i++) {
+                            writer.write(TABULADO + COMILLA + definiciones.get(i).getNombre() + COMILLA + DOS_PUNTOS + " " + LLAVE_ABRIR);
                             for (int j = 0; j < definiciones.get(i).getElementos().size(); j++) {
-                                   writer.write(COMILLA+definiciones.get(i).getElementos().get(j)+COMILLA+COMA+" ");
+                                   writer.write(COMILLA + definiciones.get(i).getElementos().get(j) + COMILLA + COMA + " ");
                             }
-                            writer.write(LLAVE_CIERRE+" "+COMA);
+                            writer.write(LLAVE_CIERRE + " " + COMA);
                             writer.write(SALTO_LINEA);
                      }
-                     writer.write(TABULADO+COMILLA + "comentarios:" + COMILLA + DOS_PUNTOS + " " + CORCHETE_ABIERTO);
+                     writer.write(TABULADO + COMILLA + "comentarios:" + COMILLA + DOS_PUNTOS + " " + CORCHETE_ABIERTO);
                      writer.write(SALTO_LINEA);
                      for (int i = 4; i < definiciones.size(); i++) {
-                            writer.write(TABULADO+COMILLA + definiciones.get(i).getNombre() + COMILLA + DOS_PUNTOS + " ");
+                            writer.write(TABULADO + COMILLA + definiciones.get(i).getNombre() + COMILLA + DOS_PUNTOS + " ");
                             for (int j = 0; j < definiciones.get(i).getElementos().size(); j++) {
                                    writer.write(COMILLA + definiciones.get(i).getElementos().get(j) + COMILLA + COMA + " ");
                             }
@@ -127,20 +119,17 @@ public class Escritor {
        }
 
        /**
-        * 
+        *
         * @param writer
         * @param resumenLexemas
-        * @throws Exception 
+        * @throws Exception
         */
        private void escribirResumenes(FileWriter writer, List<ResumenLexema> resumenLexemas) throws Exception {
               for (int i = 0; i < resumenLexemas.size(); i++) {
-                     writer.write(resumenLexemas.get(i).getLexema()+ ", " + resumenLexemas.get(i).getTipo()+ ", "
+                     writer.write(resumenLexemas.get(i).getLexema() + ", " + resumenLexemas.get(i).getTipo() + ", "
                              + resumenLexemas.get(i).getCantidadRepetida());
                      writer.write("\n");
               }
        }
-       
-       
-       
 
 }

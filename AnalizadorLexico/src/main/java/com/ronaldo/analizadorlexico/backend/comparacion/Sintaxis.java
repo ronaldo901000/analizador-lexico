@@ -54,7 +54,7 @@ public class Sintaxis {
        public boolean esPalabraReservada(String elemento) throws DefinicionException{
               DefinicionToken palabraReservada = obtenerDefincion(TipoToken.PALABRA_RESERVADA.getNombre());
               if(palabraReservada==null){
-                     
+                     throw new DefinicionException("estructura incorrecta");
               }
               for (int i = 0; i < palabraReservada.getElementos().size(); i++) {
                      if (elemento.equals(palabraReservada.getElementos().get(i))) {

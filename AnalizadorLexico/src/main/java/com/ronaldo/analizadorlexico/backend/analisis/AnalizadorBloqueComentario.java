@@ -68,12 +68,13 @@ public class AnalizadorBloqueComentario {
               for (String simboloCierre : definicion.getElementos()) {
                      int posicionBusqueda = posicionInicio;
                      int longitudSimbolo = simboloCierre.length();
-
+                     int columnaLinea=posicionBusqueda;
                      while (posicionBusqueda <= texto.length() - longitudSimbolo) {
                             while (posicionBusqueda < texto.length() && texto.charAt(posicionBusqueda) == SALTO_LINEA) {
                                    posicionBusqueda++;
                                    procesador.agregarLinea();
                                    procesador.setColumnaEnLinea(0);
+                                   columnaLinea=0;
                             }
                             if (posicionBusqueda > texto.length() - longitudSimbolo) {
                                    break;
@@ -81,15 +82,17 @@ public class AnalizadorBloqueComentario {
                             boolean coincide = true;
                             for (int i = 0; i < longitudSimbolo; i++) {
                                    if (texto.charAt(posicionBusqueda + i) != simboloCierre.charAt(i)) {
+                                          
                                           coincide = false;
                                           break;
                                    }
                             }
                             if (coincide) {
-                                   procesador.setColumnaEnLinea(posicionBusqueda);
+                                   procesador.setColumnaEnLinea(columnaLinea);
                                    return posicionBusqueda + longitudSimbolo;
                             }
                             posicionBusqueda++;
+                            columnaLinea++;
                      }
               }
               return -1;

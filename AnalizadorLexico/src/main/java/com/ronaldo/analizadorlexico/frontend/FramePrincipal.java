@@ -6,7 +6,6 @@ import com.ronaldo.analizadorlexico.frontend.dialogs.EditorJsonDialog;
 import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteErroresDialog;
 import com.ronaldo.analizadorlexico.frontend.dialogs.ReporteTokensDialog;
 import java.io.File;
-import javax.swing.BoundedRangeModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -14,8 +13,6 @@ import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
 
 
 /**
@@ -373,8 +370,8 @@ public class FramePrincipal extends javax.swing.JFrame {
        private void btnExportarTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarTxtActionPerformed
               File archivo = obtenerArchivoParaGuardar("Guardar texto de entrada", Extension.TXT.getExtension());
 
-              if (archivo != null) {
-                     motor.guardarCambiosTxt(fileEntrada,txtPaneEntrada.getText());
+              if (archivo != null ) {
+                     motor.guardarCambiosTxt(archivo,txtPaneEntrada.getText());
                      JOptionPane.showMessageDialog(null, "Archivo guardado exitosamente");
               }
        }//GEN-LAST:event_btnExportarTxtActionPerformed
@@ -579,9 +576,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                      scrollLineaSalida.getVerticalScrollBar().setValue(e.getValue());
               });
        }
-
-
-       
        // Variables declaration - do not modify//GEN-BEGIN:variables
        private javax.swing.JButton btnBuscar;
        private javax.swing.JButton btnCargaArchivo;
